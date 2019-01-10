@@ -1,0 +1,52 @@
+body {
+    margin: 0px 30px;
+}
+
+.search {
+    width: 300px;
+    text-align: left;
+}
+
+.box-delete {
+    width: 2%;
+    color: black;
+    text-align: center;
+    border-left: 1px dotted;
+    border-bottom: 1px dotted;
+}
+
+.card {
+    display: flex;
+    margin-bottom: 0.2rem;
+    border: transparent;
+    border-bottom: 1px solid #e6e6e6;
+    /*border-top: transparent;*/
+    /*border-right: transparent;*/
+    /*border-left: transparent;*/
+}
+
+.coin-container {
+    width: 98%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+}
+
+.coin-up {
+    background: yellowgreen;
+}
+
+.coin-down {
+    background: red;
+}
+
+.coin-even {
+    background: lightgrey;
+}
+
+.price {
+    color: black;
+    border-radius: 4px;
+    padding: 5px;
+}
