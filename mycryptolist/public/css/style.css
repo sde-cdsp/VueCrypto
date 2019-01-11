@@ -2,6 +2,15 @@ body {
     margin: 0px 30px;
 }
 
+.login_form {
+    width: 300px;
+    float: right;
+}
+
+.login_form, .search_bar {
+    display: inline-block;
+}
+
 .search {
     width: 300px;
     text-align: left;
@@ -9,7 +18,7 @@ body {
 
 .box-delete {
     width: 2%;
-    color: black;
+    color: orangered;
     text-align: center;
     border-left: 1px dotted;
     border-bottom: 1px dotted;
@@ -25,11 +34,17 @@ body {
     /*border-left: transparent;*/
 }
 
+.headers {
+    background-color: black;
+    color: white;
+    font-size: large;
+    margin-bottom: 10px;
+}
+
 .coin-container {
     width: 98%;
     display: flex;
     justify-content: space-between;
-    align-items: center;
     padding: 5px;
 }
 

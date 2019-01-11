@@ -6,8 +6,8 @@ import VueAxios from 'vue-axios'
 import '../public/css/foundation.min.css'
 import '../public/css/style.css'
 
-Vue.use(VueAxios, axios)
-Vue.config.productionTip = false
+Vue.use(VueAxios, axios);
+Vue.config.productionTip = false;
 
 new Vue({
     el: '#app',

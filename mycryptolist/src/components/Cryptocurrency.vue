@@ -16,43 +16,43 @@
         props: ['name', 'result'],
 
         data: function () {
-        return {
-            'coinUp': undefined,
+            return {
+                'coinUp': undefined,
             };
         },
 
         computed: {
-        dayChangeColor: function() {
-            return (this.result.CHANGE24HOUR > 0) ? "green" : "red";
+            dayChangeColor: function () {
+                return (this.result.CHANGE24HOUR > 0) ? "green" : "red";
+            },
+            change24Hour: function () {
+                return this.roundPrice(this.result.CHANGEPCT24HOUR, 3);
+            },
+            price: function () {
+                return this.roundPrice(this.result.PRICE, 4);
+            },
+            coinClass: function () {
+                if (this.coinUp === undefined)
+                    return "coin-even";
+                else if (this.coinUp)
+                    return "coin-up";
+                else
+                    return "coin-down";
+            },
+            isReady() {
+                return this.result.hasOwnProperty("PRICE");
+            }
         },
-        change24Hour: function() {
-            return this.roundPrice(this.result.CHANGEPCT24HOUR, 3);
+        watch: {
+            'result.PRICE': function (val, oldVal) {
+                this.coinUp = (val >= oldVal);
+            }
         },
-        price: function() {
-            return this.roundPrice(this.result.PRICE, 4);
-        },
-        coinClass:  function() {
-            if (this.coinUp === undefined)
-                return "coin-even";
-            else if (this.coinUp)
-                return "coin-up";
-            else
-                return "coin-down";
-        },
-        isReady() {
-            return this.result.hasOwnProperty("PRICE");
+        methods: {
+            roundPrice: (p, n) => Number(p.toPrecision(n)),
+            // deleteCrypto() {}
         }
-    },
-    watch: {
-        'result.PRICE': function (val, oldVal) {
-            this.coinUp = (val >= oldVal);
-        }
-    },
-    methods: {
-        roundPrice: (p, n) => Number(p.toPrecision(n)),
-        // deleteCrypto() {}
-    }
-};
+    };
 </script>
 
 <style scoped>
