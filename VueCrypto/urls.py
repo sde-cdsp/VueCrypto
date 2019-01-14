@@ -21,7 +21,7 @@ from core.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('index/',
+    path('',
          TemplateView.as_view(template_name="application.html"),
          name="app",
          ),

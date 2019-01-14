@@ -1,6 +1,9 @@
 <template>
     <div>
-        <h3 class="text-center">Cryptocurrency Pricing</h3>
+        <h3 class="text-center"><router-link to="/">Cryptocurrencies Pricing</router-link></h3>
+        <hr/>
+        <router-link to="/about">About</router-link>
+        <router-view></router-view>
         <div class="subhead">
             <div class="search_bar">
                 <form id="add_crypto" style="display: flex; align-items: center">
@@ -8,10 +11,7 @@
                     <input class="button" type="submit" value="Search" @click.prevent="loadData">
                 </form>
             </div>
-            <div class="login_form">
-                <input type="text" id="username" name="username" placeholder="Username">
-                <input type="text" id="password" name="password" placeholder="Password">
-            </div>
+            <login></login>
         </div>
 
         <div class="headers coin-container">
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+    import Login from './components/login/Login.vue'
     import Cryptocurrency from './components/Cryptocurrency.vue'
     // import CryptoList from './components/CryptoList.vue'
     import Vue from './main.js'
@@ -40,6 +41,7 @@
         name: 'App',
         components: {
             Cryptocurrency,
+            Login,
             // CryptoList,
         },
         data: function () {
@@ -63,7 +65,7 @@
             loadData() {
                 this.axios.get(api_url_default, {
                     params: {
-                        fsyms: this.textSearch
+                        fsyms: this.textSearch.toUpperCase()
                     }
                 }).then(response => {
                     if (response.data["Response"] === "Error")

@@ -1,12 +1,10 @@
 {% load render_bundle from webpack_loader %}
 
 <div id="app">
-    <app></app>
+    <h2 class="text-center">Cryptocurrency Pricing</h2>
+    <router-view></router-view>
 </div>
 
 {% render_bundle 'app' %}
 
 <!-- built files will be auto injected -->
-
-</body>
-</html>
