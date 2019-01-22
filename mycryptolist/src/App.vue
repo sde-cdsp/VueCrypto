@@ -54,7 +54,7 @@
             this.refreshData();
         },
         mounted() {
-            setInterval(() => this.refreshData(), 10000);
+            setInterval(() => this.refreshData(), 20000);
         },
         computed: {
             cryptosReady() { // return array of cryptos that has actual data

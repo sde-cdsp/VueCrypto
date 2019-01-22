@@ -21,13 +21,10 @@ from core.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',
-         TemplateView.as_view(template_name="application.html"),
-         name="app",
-         ),
-    path('index/signup/', signup),
-    path('index/login/', LoginView.as_view()),
-    path('index/logout/', LogoutView.as_view()),
-    path('index/<int:id>/', user_cryptos),
-    path('index/<int:id>/<str:name>', add_crypto),
+    path('', IndexView.as_view(), name="app"),
+    path('signup/', signup),
+    path('logout/', LogoutView.as_view()),
+    path('<int:id>/', user_cryptos),
+    path('<int:id>/<str:name>', add_crypto),
+    path('login/', LoginUser.as_view()),
 ]
