@@ -16,7 +16,11 @@
     </div>
 </template>
 
+
+
 <script>
+    const qs = require('qs');
+
     export default {
         name: "Login",
         data: function () {
@@ -34,27 +38,21 @@
             }
         },
         methods: {
-            getToken() {
-                this.axios.get('login/')
-                    .catch(error => {
-                        console.log(error);
-                    })
-                    .then(response => {
-                        console.log(response.data);
-                        this.csrfToken = response.data['csrf_token'];
-                        return response.data['request'];
-
-                    })
-            },
             login() {
-                const djangoRequest = this.getToken();
-                console.log(djangoRequest);
-                this.axios.post('login/', {
-                        request: djangoRequest,
-                        'csrfmiddlewaretoken': this.csrfToken,
-                        username: this.username,
-                        password: this.password
-                    })
+                const data = {
+                            username: this.username,
+                            password: this.password
+                };
+                this.axios.post(
+                    'login/',
+                    qs.stringify(data),
+                    {
+                        headers: {
+                            'X-CSRFToken': this.$cookie.get('csrftoken'),
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    }
+                    )
                     .catch(error => {
                         console.log(error);
                     })

@@ -9,6 +9,8 @@ import VueRouter from 'vue-router'
 import App from './App.vue'
 import About from './components/About.vue'
 import Login from './components/login/Login.vue'
+import VueCookie from 'vue-js-cookie'
+Vue.use(VueCookie);
 
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);

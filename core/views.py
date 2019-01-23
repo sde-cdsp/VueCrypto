@@ -1,34 +1,40 @@
 import json
 
 from braces.views import JSONResponseMixin
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.core import serializers
 from django.http import JsonResponse
 from django.middleware.csrf import CsrfViewMiddleware, get_token
+from django.views.decorators.cache import never_cache
+from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import View, TemplateView
 from django.core import serializers
 
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import csrf_protect, ensure_csrf_cookie
 
+
+@method_decorator(ensure_csrf_cookie, name="get")
 class IndexView(TemplateView):
     template_name = "application.html"
 
 
-@method_decorator(csrf_protect, name='post')
 class LoginUser(JSONResponseMixin, View):
-    def get(self, request, *args, **kwargs):
-        token = get_token(request)
-        return self.render_json_response({'csrf_token': token, 'request': json.dumps(request.__dict__)}, status=200)  # FIXME: how to send request to Vue then send it back to check csrf?
 
+    @method_decorator(csrf_protect)
+    @method_decorator(never_cache)
     def post(self, request, *args, **kwargs):
-        # reason = CsrfViewMiddleware().process_view(request, None, (), {})
-        # if reason is not None:
-        #     return self.render_json_response({'error': "failed csrf"}, status=400)
         try:
-            user = User.objects.get(username=request.POST.get('username'), password=request.POST.get('password'))
+            user = User.objects.get(username=request.POST.get('username'))
         except:
-            return self.render_json_response({'error': "bad username or password"})
+            return self.render_json_response({'error': "User does not exist"}, status=500)
+        if request.user != user:  # user is not authenticated
+            user = authenticate(username=user.username, password=request.POST.get('password'))
+            if user is not None:
+                login(request, user)
+            else:
+                return self.render_json_response({'error': "Bad password"}, status=500)
         return self.render_json_response({}, status=200)
 
 

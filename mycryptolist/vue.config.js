@@ -1,6 +1,7 @@
 
 
 const BundleTracker = require("webpack-bundle-tracker");
+// const webpack = require("webpack");
 
 module.exports = {
     publicPath: "http://0.0.0.0:8080/",
@@ -29,3 +30,10 @@ module.exports = {
             .headers({"Access-Control-Allow-Origin": ["\*"]})
             }
         };
+
+// new webpack.ProvidePlugin({
+//     $: 'jquery',
+//     jquery: 'jquery',
+//     'window.jQuery': 'jquery',
+//     jQuery: 'jquery'
+//   });

@@ -34,7 +34,6 @@
     import Cryptocurrency from './components/Cryptocurrency.vue'
     // import CryptoList from './components/CryptoList.vue'
     import Vue from './main.js'
-
     const api_url_default = "https://min-api.cryptocompare.com/data/pricemultifull?tsyms=USD";
 
     export default {
