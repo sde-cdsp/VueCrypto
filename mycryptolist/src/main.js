@@ -9,9 +9,9 @@ import VueRouter from 'vue-router'
 import App from './App.vue'
 import About from './components/About.vue'
 import Login from './components/login/Login.vue'
-import VueCookie from 'vue-js-cookie'
-Vue.use(VueCookie);
+import VueCookies from 'vue-cookies'
 
+Vue.use(VueCookies);
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
 Vue.config.productionTip = false;
