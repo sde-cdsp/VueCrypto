@@ -2,8 +2,6 @@
     <div>
         <h3 class="text-center"><router-link to="/">Cryptocurrencies Pricing</router-link></h3>
         <hr/>
-        <router-link to="/about">About</router-link>
-        <router-view></router-view>
         <div class="subhead">
             <div class="search_bar">
                 <form id="add_crypto" style="display: flex; align-items: center">
@@ -11,7 +9,7 @@
                     <input class="button" type="submit" value="Search" @click.prevent="loadData">
                 </form>
             </div>
-            <login></login>
+            <router-view></router-view>
         </div>
 
         <div class="headers coin-container">
@@ -30,7 +28,7 @@
 </template>
 
 <script>
-    import Login from './components/login/Login.vue'
+    import Login from './components/Login.vue'
     import Cryptocurrency from './components/Cryptocurrency.vue'
     // import CryptoList from './components/CryptoList.vue'
     import Vue from './main.js'

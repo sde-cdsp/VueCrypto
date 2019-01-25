@@ -4,10 +4,14 @@
             <span>Welcome {{loginForm.username}}</span>&nbsp;<a style="float: right;" @click="logout">Log out</a>
         </div>
         <div v-else-if="loginForm.displayForm">
+            <router-link style="float: right" to="/register/">Register</router-link>
             <input type="text" id="username" name="username" placeholder="Username" v-model="loginForm.username">
             <input type="password" id="password" name="password" placeholder="Password" v-model="loginForm.password">
             <span id="error-login" class="form-error" v-bind:class="{'is-visible': loginForm.error}" v-text="loginForm.error"></span>
-            <button id="login-button" type="submit" class="button" :disabled=loginForm.isLoginDisabled() @click="login">Log in</button>&nbsp;<a style="float: right;" @click="loginForm.switchDisplay()">Forgot your password?</a>
+            <div class="btn btn-lg ld-ext-right button" v-bind:class="{'running': loginForm.isLoading}" :disabled=loginForm.isLoginDisabled() @click="login">Log in
+                <div id="login-button" type="submit" class="ld ld-ring ld-spin"></div>
+            </div>
+            &nbsp;<a style="float: right;" @click="loginForm.switchDisplay()">Forgot your password?</a>
         </div>
         <div v-else>
             <span>A new password will be sent to the email associated with your username</span>
@@ -16,7 +20,6 @@
         </div>
     </div>
 </template>
-
 
 
 <script>
@@ -52,6 +55,7 @@
 
         reset() {
             this.displayForm = true;
+            this.isLoading = false;
             this.username = this.password = this.error = "";
         }
 
@@ -64,9 +68,9 @@
         }
 
         login() {
-            this.isLoading = true;
             return new Promise((resolve, reject) => {  // a Promise is returned to handle Vue related data
-                axios.post('login/', this.userData(), this.headers())
+                this.isLoading = true;
+                return axios.post('login/', this.userData(), this.headers())
                 .then(() => {
                     resolve();
                 })
@@ -107,17 +111,16 @@
 
         methods: {
             login() {
-                const self = this;
                 this.loginForm.login()
                     .then(() => this.connected = true)
                     .catch((error) => console.log(error))
-                    .finally(() => self.loginForm.isLoading = false) // FIXME: not working!
+                    .finally(() => this.loginForm.isLoading = false)
             },
             logout() {
                 this.loginForm.logout()
                     .then(() => this.connected = false)
                     .catch((error) => console.log(error))
-                    .finally(() => self.loginForm.isLoading = false) // FIXME: not working!
+                    .finally(() => this.loginForm.isLoading = false)
             }
         }
     }

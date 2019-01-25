@@ -2,13 +2,16 @@ import Vue from 'vue'
 import './plugins/vuetify'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import '../public/css/foundation.min.css'
-import '../public/css/style.css'
+import './assets/css/foundation.min.css'
+import './assets/css/style.css'
+import './assets/css/loading-btn.css'
+import './assets/css/loading.css'
 import VueRouter from 'vue-router'
 
 import App from './App.vue'
 import About from './components/About.vue'
-import Login from './components/login/Login.vue'
+import Login from './components/Login.vue'
+import Register from './components/Register.vue'
 import VueCookies from 'vue-cookies'
 
 Vue.use(VueCookies);
@@ -18,8 +21,8 @@ Vue.config.productionTip = false;
 
 const routes = [
     { path: '/index', component: App, name: 'Index' },
-    { path: '/about', component: About, name: 'About' },
-    { path: '/login/', component: Login, name: 'Login' },
+    { path: '/', component: Login, name: 'Login' },
+    { path: '/register/', component: Register, name: 'Register' },
 ];
 
 const router = new VueRouter({

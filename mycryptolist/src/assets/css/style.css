@@ -2,12 +2,12 @@ body {
     margin: 0px 30px;
 }
 
-.login_form {
+.login_form, .register_form {
     width: 300px;
     float: right;
 }
 
-.login_form, .search_bar {
+.login_form, .register_form, .search_bar {
     display: inline-block;
 }
 
