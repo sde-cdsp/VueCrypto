@@ -3,6 +3,7 @@
         <h3 class="text-center"><router-link to="/">Cryptocurrencies Pricing</router-link></h3>
         <hr/>
         <div class="subhead">
+            <notifications group="notif"></notifications>
             <div class="search_bar">
                 <form id="add_crypto" style="display: flex; align-items: center">
                     <input class="search" type="text" placeholder="Search cryptocurrency..." v-model="textSearch">

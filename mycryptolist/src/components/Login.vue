@@ -5,10 +5,10 @@
         </div>
         <div v-else-if="loginForm.displayForm">
             <router-link style="float: right" to="/register/">Register</router-link>
-            <input type="text" id="username" name="username" placeholder="Username" v-model="loginForm.username">
-            <input type="password" id="password" name="password" placeholder="Password" v-model="loginForm.password">
+            <input type="text" id="id_username" name="username" placeholder="Username" v-model="loginForm.username">
+            <input type="password" id="id_password" name="password" placeholder="Password" v-model="loginForm.password">
             <span id="error-login" class="form-error" v-bind:class="{'is-visible': loginForm.error}" v-text="loginForm.error"></span>
-            <div class="btn btn-lg ld-ext-right button" v-bind:class="{'running': loginForm.isLoading}" :disabled=loginForm.isLoginDisabled() @click="login">Log in
+            <div class="btn btn-lg ld-ext-right button" v-bind:class="{'running': loginForm.isLoading}" :disabled=loginForm.isFormDisabled() @click="login">Log in
                 <div id="login-button" type="submit" class="ld ld-ring ld-spin"></div>
             </div>
             &nbsp;<a style="float: right;" @click="loginForm.switchDisplay()">Forgot your password?</a>
@@ -23,48 +23,20 @@
 
 
 <script>
-    import qs from 'qs';
+
     import axios from 'axios';
+    import Form from '../utils/utils.js'
 
-    class LoginForm {
+    class LoginForm extends Form {
         constructor(data) {
-            for (let field in data) {
-                this[field] = data[field];
-            }
-            this.displayForm = true;
-            this.error = "";
-            this.isLoading = false;
+            super(data);
         }
 
-        userData() {
-            const data = {
-                username: this.username,
-                password: this.password
-            };
-            return qs.stringify(data);
-        }
-
-        headers() {
+        defaultData() {
             return {
-                headers: {
-                            'X-CSRFToken': window.$cookies.get('csrftoken'),
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                }
+                username: '',
+                password: ''
             }
-        }
-
-        reset() {
-            this.displayForm = true;
-            this.isLoading = false;
-            this.username = this.password = this.error = "";
-        }
-
-        switchDisplay () {
-            this.displayForm = !this.displayForm;
-        }
-
-        isLoginDisabled() {
-            return this.username.length === 0 || this.password.length === 0
         }
 
         login() {
@@ -80,12 +52,13 @@
                 })
             });
         }
+
         logout() {
             this.isLoading = true;
             return new Promise((resolve, reject) => {
                 axios.post('logout/', {}, this.headers())
                 .then(() => {
-                    this.reset();
+                    this.reset(this.defaultData());
                     resolve();
                 })
                 .catch(error => {
@@ -94,7 +67,6 @@
                 })
             });
         }
-
     }
 
     export default {
@@ -112,18 +84,33 @@
         methods: {
             login() {
                 this.loginForm.login()
-                    .then(() => this.connected = true)
-                    .catch((error) => console.log(error))
+                    .then(() => {
+                        this.connected = true;
+                        this.$notify({
+                            group: 'notif',
+                            text: 'You are successfully logged in',
+                            type: 'success'
+                        });
+                    })
+                    .catch(error => console.log(error))
                     .finally(() => this.loginForm.isLoading = false)
             },
             logout() {
                 this.loginForm.logout()
-                    .then(() => this.connected = false)
-                    .catch((error) => console.log(error))
+                    .then(() => {
+                        this.connected = false;
+                        this.$notify({
+                            group: 'notif',
+                            text: 'You are successfully logged out',
+                            type: 'success'
+                        });
+                    })
+                    .catch(error => console.log(error))
                     .finally(() => this.loginForm.isLoading = false)
             }
         }
     }
+
 </script>
 
 <style scoped>

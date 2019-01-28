@@ -22,9 +22,9 @@ from core.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexView.as_view(), name="app"),
-    path('signup/', signup),
+    path('register/', RegisterUser.as_view()),
+    path('login/', LoginUser.as_view()),
     path('logout/', LogoutView.as_view()),
     path('<int:id>/', user_cryptos),
     path('<int:id>/<str:name>', add_crypto),
-    path('login/', LoginUser.as_view()),
 ]

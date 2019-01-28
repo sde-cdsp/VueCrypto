@@ -13,7 +13,9 @@ import About from './components/About.vue'
 import Login from './components/Login.vue'
 import Register from './components/Register.vue'
 import VueCookies from 'vue-cookies'
+import Notifications from 'vue-notification'
 
+Vue.use(Notifications);
 Vue.use(VueCookies);
 Vue.use(VueRouter);
 Vue.use(VueAxios, axios);
