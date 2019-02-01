@@ -2,7 +2,7 @@ body {
     margin: 0px 30px;
 }
 
-.login_form, .register_form {
+.login_form, .register_form, .password_form {
     width: 300px;
     float: right;
 }
@@ -29,9 +29,6 @@ body {
     margin-bottom: 0.2rem;
     border: transparent;
     border-bottom: 1px solid #e6e6e6;
-    /*border-top: transparent;*/
-    /*border-right: transparent;*/
-    /*border-left: transparent;*/
 }
 
 .headers {
@@ -39,13 +36,21 @@ body {
     color: white;
     font-size: large;
     margin-bottom: 10px;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 5px;
 }
 
-.coin-container {
-    width: 98%;
+.coin-container{
+    width: 100%;
     display: flex;
     justify-content: space-between;
     padding: 5px;
+}
+
+.coin-container > span {
+    display: flex;
 }
 
 .coin-up {

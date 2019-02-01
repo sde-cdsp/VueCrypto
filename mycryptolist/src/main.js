@@ -12,6 +12,7 @@ import App from './App.vue'
 import About from './components/About.vue'
 import Login from './components/Login.vue'
 import Register from './components/Register.vue'
+import PasswordReset from './components/PasswordReset.vue'
 import VueCookies from 'vue-cookies'
 import Notifications from 'vue-notification'
 
@@ -25,6 +26,7 @@ const routes = [
     { path: '/index', component: App, name: 'Index' },
     { path: '/', component: Login, name: 'Login' },
     { path: '/register/', component: Register, name: 'Register' },
+    { path: '/password_reset/', component: PasswordReset, name: 'PasswordReset' },
 ];
 
 const router = new VueRouter({

@@ -24,6 +24,8 @@ urlpatterns = [
     path('', IndexView.as_view(), name="app"),
     path('register/', RegisterUser.as_view()),
     path('login/', LoginUser.as_view()),
+    path('ask_reset_password/', AskResetPasswordView.as_view()),
+    path('reset_password/', ResetPasswordView.as_view()),
     path('logout/', LogoutView.as_view()),
     path('<int:id>/', user_cryptos),
     path('<int:id>/<str:name>', add_crypto),

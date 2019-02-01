@@ -1,22 +1,17 @@
 <template>
     <div class="login_form">
         <div v-if="connected">
-            <span>Welcome {{loginForm.username}}</span>&nbsp;<a style="float: right;" @click="logout">Log out</a>
-        </div>
-        <div v-else-if="loginForm.displayForm">
-            <router-link style="float: right" to="/register/">Register</router-link>
-            <input type="text" id="id_username" name="username" placeholder="Username" v-model="loginForm.username">
-            <input type="password" id="id_password" name="password" placeholder="Password" v-model="loginForm.password">
-            <span id="error-login" class="form-error" v-bind:class="{'is-visible': loginForm.error}" v-text="loginForm.error"></span>
-            <div class="btn btn-lg ld-ext-right button" v-bind:class="{'running': loginForm.isLoading}" :disabled=loginForm.isFormDisabled() @click="login">Log in
-                <div id="login-button" type="submit" class="ld ld-ring ld-spin"></div>
-            </div>
-            &nbsp;<a style="float: right;" @click="loginForm.switchDisplay()">Forgot your password?</a>
+            <span>Welcome {{form.username}}</span>&nbsp;<a style="float: right;" @click="logout">Log out</a>
         </div>
         <div v-else>
-            <span>A new password will be sent to the email associated with your username</span>
-            <input type="text" id="newpassword" name="newpassword" placeholder="Your username">
-            <button id="password-button" type="submit" class="button">Submit</button><a style="float: right;" @click="loginForm.switchDisplay()">back to login</a>
+            <router-link style="float: right" to="/register/">Register</router-link>
+            <input type="text" id="id_username" name="username" placeholder="Username" v-model="form.username">
+            <input type="password" id="id_password" name="password" placeholder="Password" v-model="form.password">
+            <span id="error-login" class="form-error is-visible" v-text="this.form.errorstoString()"></span>
+            <div class="btn btn-lg ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="login">Log in
+                <div id="login-button" type="submit" class="ld ld-ring ld-spin"></div>
+            </div>
+            &nbsp;<router-link style="float: right;" to="/password_reset/">Forgot your password?</router-link>
         </div>
     </div>
 </template>
@@ -47,8 +42,8 @@
                     resolve();
                 })
                 .catch(error => {
-                    this.error = error.response.data.error;
-                    reject(error.response.data);
+                    this.errors = error.response.data.error;
+                    reject();
                 })
             });
         }
@@ -62,8 +57,8 @@
                     resolve();
                 })
                 .catch(error => {
-                    this.error = error.response.data.error;
-                    reject(error.response.data);
+                    this.errors = error.response.data.error;
+                    reject();
                 })
             });
         }
@@ -71,9 +66,9 @@
 
     export default {
         name: "Login",
-        data: function () {
+        data: () => {
             return {
-                loginForm: new LoginForm({
+                form: new LoginForm({
                     username: '',
                     password: ''
                 }),
@@ -83,7 +78,7 @@
 
         methods: {
             login() {
-                this.loginForm.login()
+                this.form.login()
                     .then(() => {
                         this.connected = true;
                         this.$notify({
@@ -92,11 +87,11 @@
                             type: 'success'
                         });
                     })
-                    .catch(error => console.log(error))
-                    .finally(() => this.loginForm.isLoading = false)
+                    .catch(() => this.form.isLoading = false)
+                    .finally(() => this.form.isLoading = false)
             },
             logout() {
-                this.loginForm.logout()
+                this.form.logout()
                     .then(() => {
                         this.connected = false;
                         this.$notify({
@@ -105,8 +100,8 @@
                             type: 'success'
                         });
                     })
-                    .catch(error => console.log(error))
-                    .finally(() => this.loginForm.isLoading = false)
+                    .catch(() => this.form.isLoading = false)
+                    .finally(() => this.form.isLoading = false)
             }
         }
     }

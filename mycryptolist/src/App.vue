@@ -13,10 +13,11 @@
             <router-view></router-view>
         </div>
 
-        <div class="headers coin-container">
+        <div class="headers">
             <span>Coin</span>
             <span>Price</span>
             <span>24 hours change</span>
+            <span>Socials</span>
             <span>Action</span>
         </div>
         <div v-for="crypto in cryptosReady" v-bind:key="crypto.name">
@@ -42,7 +43,7 @@
             Login,
             // CryptoList,
         },
-        data: function () {
+        data: () => {
             return {
                 textSearch: "",
                 cryptos: [{name: 'BTC', result: {}}, {name: 'NANO', result: {}}],
@@ -57,27 +58,42 @@
         computed: {
             cryptosReady() { // return array of cryptos that has actual data
                 return this.cryptos.filter(crypto => crypto.result.hasOwnProperty("PRICE"))
-            }
+            },
         },
         methods: {
+            getCryptosNames() {
+                let names = [];
+                for (let obj of this.cryptos)
+                    names.push(obj['name'])
+                return names
+            },
             loadData() {
+                if (this.getCryptosNames().includes(this.textSearch.toUpperCase())) {
+                    this.$notify({
+                        text: this.textSearch.toUpperCase() + ' already in your list!',
+                        type: 'warn',
+                        group: 'notif'
+                    });
+                    return;
+                }
                 this.axios.get(api_url_default, {
                     params: {
                         fsyms: this.textSearch.toUpperCase()
                     }
                 }).then(response => {
                     if (response.data["Response"] === "Error")
-                        alert("This cryptocurrency does not exist.\"");
-                    // $('.button').notify("This cryptocurrency does not exist.", {
-                    //     className: 'error',
-                    //     autoHideDelay: 2000
-                    // })
+                        this.$notify({
+                                text: 'This cryptocurrency does not exist.',
+                                type: 'error',
+                                group: 'notif'
+                            });
                     else {
-                        // $('.button').notify(this.textSearch + " added", {
-                        //     className: 'success',
-                        //     autoHideDelay: 2000
-                        // });
-                        var obj = Object.values(response.data.RAW)[0];
+                        this.$notify({
+                                text: this.textSearch + ' added',
+                                type: 'success',
+                                group: 'notif'
+                            });
+                        let obj = Object.values(response.data.RAW)[0];
                         obj['name'] = obj['USD']['FROMSYMBOL'];
                         obj['result'] = obj['USD'];
                         delete obj['USD'];
@@ -89,15 +105,16 @@
             deleteCrypto(crypto) {
                 Vue.delete(this.cryptos, crypto);
                 this.cryptos = this.cryptos.filter(ee => ee !== crypto);
-                // $.notify(crypto + " deleted", "success");
+                this.$notify({
+                    text: crypto['name'] + ' deleted',
+                    type: 'success',
+                    group: 'notif'
+                });
             },
             refreshData() {
-                var names = [];
-                for (let obj of this.cryptos)
-                    names.push(obj['name'])
                 this.axios.get(api_url_default, {
                     params: {
-                        fsyms: names.join()
+                        fsyms: this.getCryptosNames().join()
                     }
                 }).then(response => {
                     this.cryptos = [];

@@ -28,7 +28,7 @@ class Form {
             this[field] = data[field];
         }
         this.displayForm = true;
-        this.error = "";
+        this.errors = {};
         this.isLoading = false;
     }
 
@@ -43,6 +43,15 @@ class Form {
 
     switchDisplay () {
         this.displayForm = !this.displayForm;
+    }
+
+    errorstoString() {
+        let str = "";
+        for (let field in this.errors) {
+            str += this.errors[field].join('\n');
+            str += '\n';
+        }
+        return str;
     }
 }
 

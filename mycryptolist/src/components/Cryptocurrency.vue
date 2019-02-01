@@ -1,11 +1,12 @@
 <template>
     <div class="coin-container">
-        <span class="coin large-3 columns" style="font-weight: bold;"> {{ name }}</span>
-        <span class="large-3 columns">
+        <span style="font-weight: bold"> {{ name }}</span>
+        <span>
             <span display="isReady" class="price" :class="coinClass">{{ price }}$</span>
         </span>
-        <span display="isReady" class="large-3 columns" :style="{color: dayChangeColor}">{{change24Hour}}%</span>
-        <a class="box-delete large-3 columns" href="#" @click="$emit('delete', name)">x</a>
+        <span display="isReady" :style="{color: dayChangeColor}">{{ change24Hour }}%</span>
+        <span>{{ socials }}</span>
+        <span><a class="box-delete" href="#" @click="$emit('delete', name)">x</a></span>
     </div>
 </template>
 
