@@ -39,8 +39,8 @@
 
         methods: {
             register() {
-                this.isLoading = true;
-                return axios.post('register/', this.form.userData(), this.form.headers())
+                this.form.isLoading = true;
+                return axios.post('', this.form.userData(), this.form.headers())
                 .then(() => {
                     this.$notify({
                             group: 'notif',

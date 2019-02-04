@@ -9,9 +9,9 @@ import './assets/css/loading.css'
 import VueRouter from 'vue-router'
 
 import App from './App.vue'
-import About from './components/About.vue'
 import Login from './components/Login.vue'
 import Register from './components/Register.vue'
+import AskPasswordReset from './components/AskPasswordReset.vue'
 import PasswordReset from './components/PasswordReset.vue'
 import VueCookies from 'vue-cookies'
 import Notifications from 'vue-notification'
@@ -26,11 +26,14 @@ const routes = [
     { path: '/index', component: App, name: 'Index' },
     { path: '/', component: Login, name: 'Login' },
     { path: '/register/', component: Register, name: 'Register' },
+    { path: '/ask_password_reset/', component: AskPasswordReset, name: 'AskPasswordReset' },
     { path: '/password_reset/', component: PasswordReset, name: 'PasswordReset' },
 ];
 
 const router = new VueRouter({
-  routes // short for `routes: routes`
+    mode: 'history',
+    relative: true,
+    routes: routes
 });
 
 new Vue({

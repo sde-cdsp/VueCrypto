@@ -11,7 +11,7 @@
             <div class="btn btn-lg ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="login">Log in
                 <div id="login-button" type="submit" class="ld ld-ring ld-spin"></div>
             </div>
-            &nbsp;<router-link style="float: right;" to="/password_reset/">Forgot your password?</router-link>
+            &nbsp;<router-link style="float: right;" to="/ask_password_reset/">Forgot your password?</router-link>
         </div>
     </div>
 </template>
@@ -35,8 +35,8 @@
         }
 
         login() {
+            this.isLoading = true;
             return new Promise((resolve, reject) => {  // a Promise is returned to handle Vue related data
-                this.isLoading = true;
                 return axios.post('login/', this.userData(), this.headers())
                 .then(() => {
                     resolve();

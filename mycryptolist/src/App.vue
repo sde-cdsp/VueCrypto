@@ -30,7 +30,6 @@
 </template>
 
 <script>
-    import Login from './components/Login.vue'
     import Cryptocurrency from './components/Cryptocurrency.vue'
     // import CryptoList from './components/CryptoList.vue'
     import Vue from './main.js'
@@ -40,7 +39,6 @@
         name: 'App',
         components: {
             Cryptocurrency,
-            Login,
             // CryptoList,
         },
         data: () => {
