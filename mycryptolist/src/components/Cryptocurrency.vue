@@ -1,12 +1,12 @@
 <template>
     <div class="coin-container">
-        <span style="font-weight: bold"> {{ name }}</span>
+        <span style="font-weight: bold"> {{ symbol }}</span>
         <span>
             <span display="isReady" class="price" :class="coinClass">{{ price }}$</span>
         </span>
         <span display="isReady" :style="{color: dayChangeColor}">{{ change24Hour }}%</span>
         <span>{{ socials }}</span>
-        <span><a class="box-delete" href="#" @click="$emit('delete', name)">x</a></span>
+        <span><a class="box-delete" href="#" @click="$emit('delete', symbol)">x</a></span>
     </div>
 </template>
 
@@ -14,7 +14,7 @@
     export default {
         name: "Cryptocurrency",
 
-        props: ['name', 'result'],
+        props: ['symbol', 'result'],
 
         data: function () {
             return {

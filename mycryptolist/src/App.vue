@@ -20,9 +20,9 @@
             <span>Socials</span>
             <span>Action</span>
         </div>
-        <div v-for="crypto in cryptosReady" v-bind:key="crypto.name">
-            <div class="card" :id="crypto.name">
-                <cryptocurrency :result="crypto.result" :name="crypto.name"
+        <div v-for="crypto in cryptosReady" v-bind:key="crypto.symbol">
+            <div class="card" :id="crypto.symbol">
+                <cryptocurrency :result="crypto.result" :symbol="crypto.symbol"
                                 @delete="deleteCrypto(crypto)"></cryptocurrency>
             </div>
         </div>
@@ -43,11 +43,15 @@
         },
         data: () => {
             return {
+                username: "",
                 textSearch: "",
-                cryptos: [{name: 'BTC', result: {}}, {name: 'NANO', result: {}}],
+                cryptos: [{symbol: 'BTC', result: {}}, {symbol: 'NANO', result: {}}],
             }
         },
         created() {
+            this.axios.get('get_user_connected').then(response => {
+                this.username = response['data']['username'];
+            });
             this.refreshData();
         },
         mounted() {
@@ -59,14 +63,19 @@
             },
         },
         methods: {
-            getCryptosNames() {
-                let names = [];
+            getSymbols() {
+                let symbols = [];
                 for (let obj of this.cryptos)
-                    names.push(obj['name'])
-                return names
+                    symbols.push(obj['symbol'])
+                return symbols
+            },
+            addCrypto(symbol) {
+                this.axios.push('add_crypto/', {
+                    symbol: symbol
+                })
             },
             loadData() {
-                if (this.getCryptosNames().includes(this.textSearch.toUpperCase())) {
+                if (this.getSymbols().includes(this.textSearch.toUpperCase())) {
                     this.$notify({
                         text: this.textSearch.toUpperCase() + ' already in your list!',
                         type: 'warn',
@@ -92,7 +101,7 @@
                                 group: 'notif'
                             });
                         let obj = Object.values(response.data.RAW)[0];
-                        obj['name'] = obj['USD']['FROMSYMBOL'];
+                        obj['symbol'] = obj['USD']['FROMSYMBOL'];
                         obj['result'] = obj['USD'];
                         delete obj['USD'];
                         this.cryptos.push(obj);
@@ -104,7 +113,7 @@
                 Vue.delete(this.cryptos, crypto);
                 this.cryptos = this.cryptos.filter(ee => ee !== crypto);
                 this.$notify({
-                    text: crypto['name'] + ' deleted',
+                    text: crypto['symbol'] + ' deleted',
                     type: 'success',
                     group: 'notif'
                 });
@@ -112,12 +121,12 @@
             refreshData() {
                 this.axios.get(api_url_default, {
                     params: {
-                        fsyms: this.getCryptosNames().join()
+                        fsyms: this.getSymbols().join()
                     }
                 }).then(response => {
                     this.cryptos = [];
                     for (let obj of Object.values(response.data.RAW)) {
-                        obj['name'] = obj['USD']['FROMSYMBOL'];
+                        obj['symbol'] = obj['USD']['FROMSYMBOL'];
                         obj['result'] = obj['USD'];
                         delete obj['USD'];
                         this.cryptos.push(obj);
