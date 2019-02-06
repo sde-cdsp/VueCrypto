@@ -1,7 +1,7 @@
 <template>
     <div class="login_form">
-        <div v-if="connected">
-            <span>Welcome {{form.username}}</span>&nbsp;<a style="float: right;" @click="logout">Log out</a>
+        <div v-if="isConnected">
+            <span>Welcome {{username}}</span>&nbsp;<a style="float: right;" @click="logout">Log out</a>
         </div>
         <div v-else>
             <router-link style="float: right" to="/register/">Register</router-link>
@@ -38,8 +38,8 @@
             this.isLoading = true;
             return new Promise((resolve, reject) => {  // a Promise is returned to handle Vue related data
                 return axios.post('login/', this.userData(), this.headers())
-                .then(() => {
-                    resolve();
+                .then((response) => {
+                    resolve(response);
                 })
                 .catch(error => {
                     this.errors = error.response.data.error;
@@ -52,9 +52,9 @@
             this.isLoading = true;
             return new Promise((resolve, reject) => {
                 axios.post('logout/', {}, this.headers())
-                .then(() => {
+                .then((response) => {
                     this.reset(this.defaultData());
-                    resolve();
+                    resolve(response);
                 })
                 .catch(error => {
                     this.errors = error.response.data.error;
@@ -66,39 +66,51 @@
 
     export default {
         name: "Login",
+
+        props: {
+            username: {
+                type: String,
+                default: ''
+            }
+        },
+
         data: () => {
             return {
                 form: new LoginForm({
                     username: '',
                     password: ''
                 }),
-                connected: false
             }
         },
-
+        computed: {
+            isConnected() {
+                return this.username.length > 0;
+            }
+        },
         methods: {
             login() {
                 this.form.login()
-                    .then(() => {
-                        this.connected = true;
+                    .then((response) => {
+                        // this.username = response.data['username']
                         this.$notify({
                             group: 'notif',
                             text: 'You are successfully logged in',
                             type: 'success'
                         });
+                        this.$emit('connect', response.data['username'])
                     })
                     .catch(() => this.form.isLoading = false)
                     .finally(() => this.form.isLoading = false)
             },
             logout() {
                 this.form.logout()
-                    .then(() => {
-                        this.connected = false;
+                    .then((response) => {
                         this.$notify({
                             group: 'notif',
                             text: 'You are successfully logged out',
                             type: 'success'
                         });
+                        this.$emit('connect', response.data['username'])
                     })
                     .catch(() => this.form.isLoading = false)
                     .finally(() => this.form.isLoading = false)

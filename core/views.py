@@ -27,7 +27,6 @@ class IndexView(JSONResponseMixin, TemplateView):
 
     def render_to_json(self, context_data={}, status=200):
         context_data['username'] = self.request.user.username if not self.request.user.is_anonymous else ""
-        print(context_data)
         return self.render_json_response(context_data, status)
 
 
@@ -49,7 +48,7 @@ class RegisterUser(IndexView):
                 password=form.cleaned_data['password1'],
                 email=request.POST.get('email'),
             )
-            return self.render_to_json({}, status=200)
+            return self.render_to_json()
         return self.render_to_json({'error': form.errors}, status=500)
 
 
@@ -65,7 +64,7 @@ class LoginUser(IndexView):
                 login(request, user)
             else:
                 return self.render_to_json({'error': {"password": ["Wrong password."]}}, status=500)
-        return self.render_to_json({}, status=200)
+        return self.render_to_json()
 
 
 # class LoginUser2(LoginView):
@@ -85,7 +84,7 @@ class LoginUser(IndexView):
 class LogoutUser(IndexView):
     def post(self, request):
         logout(request)
-        return self.render_to_json({})
+        return self.render_to_json()
 
 
 class AskPasswordResetView(IndexView):
@@ -102,7 +101,7 @@ class AskPasswordResetView(IndexView):
         except ObjectDoesNotExist:
             return self.render_to_json({'error': {"username": ["No e-mail associated with this username"]}}, status=500)
         self.reset_password(request, user)
-        return self.render_to_json({})
+        return self.render_to_json()
 
 
 class PasswordResetView(IndexView):
@@ -135,8 +134,17 @@ def add_crypto(request, user_id, crypto_name):
     return
 
 
-class AddCrypto(IndexView):
+class UserCrypto(IndexView):
     CMC_ENDPOINT = 'v1/cryptocurrency/info'
+
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_anonymous:
+            return self.render_to_json()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        symbols = CryptoUser.objects.filter(user=request.user).values_list('crypto__symbol', flat=True)
+        return self.render_to_json({'symbols': list(symbols)})
 
     def post(self, request):
         def data_crypto(data):
@@ -160,11 +168,12 @@ class AddCrypto(IndexView):
             except IntegrityError:
                 pass
 
-        if request.user.is_anonymous():
-            return self.render_to_json()
-
         symbol = request.POST.get('symbol')
-        r = requests.get(configs.CMC_DOMAIN + self.CMC_ENDPOINT, params=({'symbol': symbol}), headers={'X-CMC_PRO_API_KEY': configs.CMC_KEY})
+        r = requests.get(
+            configs.CMC_DOMAIN + self.CMC_ENDPOINT,
+            params=({'symbol': symbol}),
+            headers={'X-CMC_PRO_API_KEY': configs.CMC_KEY}
+        )
         response = r.json()
 
         crypto = data_crypto(response['data'][symbol])

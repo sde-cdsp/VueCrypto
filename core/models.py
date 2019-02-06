@@ -33,6 +33,7 @@ class CryptoUser(models.Model):
     class Meta:
         unique_together = (('user', 'crypto'))
 
+
 class ResetPassword(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     key = models.UUIDField(default=uuid.uuid4)

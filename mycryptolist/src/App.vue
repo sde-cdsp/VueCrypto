@@ -10,7 +10,8 @@
                     <input class="button" type="submit" value="Search" @click.prevent="loadData">
                 </form>
             </div>
-            <router-view></router-view>
+            <!--<router-view :appUsername="username"></router-view>-->
+            <router-view :username="username" @connect="onConnect"></router-view>
         </div>
 
         <div class="headers">
@@ -45,22 +46,29 @@
             return {
                 username: "",
                 textSearch: "",
-                cryptos: [{symbol: 'BTC', result: {}}, {symbol: 'NANO', result: {}}],
+                // cryptos: [{symbol: 'BTC', result: {}}, {symbol: 'NANO', result: {}}],
+                cryptos: [],
             }
         },
         created() {
-            this.axios.get('get_user_connected').then(response => {
+            this.axios.get('get_user_connected/').then(response => {
                 this.username = response['data']['username'];
+                this.initData();
             });
-            this.refreshData();
         },
         mounted() {
-            setInterval(() => this.refreshData(), 20000);
+            !this.cryptosEmpty && setInterval(() => this.refreshData(), 20000);
         },
         computed: {
+            cryptosEmpty() {
+                return this.cryptos.length === 0;
+            },
             cryptosReady() { // return array of cryptos that has actual data
                 return this.cryptos.filter(crypto => crypto.result.hasOwnProperty("PRICE"))
             },
+            userIsConnected() {
+                return this.username.length > 0
+            }
         },
         methods: {
             getSymbols() {
@@ -133,6 +141,24 @@
                     }
                 })
             },
+            initData() {
+                this.axios.get('user_crypto')
+                .then(response => {
+                    if(response.data['username']) {
+                        this.cryptos = [];
+                        for (let symbol of response.data['symbols'])
+                            this.cryptos.push({'symbol': symbol, 'result': {}});
+                        }
+                })
+                .finally(() => {
+                    if (!this.cryptosEmpty)
+                        this.refreshData();
+                });
+            },
+            onConnect(username) {
+                this.username = username;
+                this.initData();
+            }
         }
     }
 </script>
