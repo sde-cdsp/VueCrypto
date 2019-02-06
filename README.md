@@ -16,13 +16,16 @@ npm run serve
 
 ## Django part
 
-### in VueCrypto/settings.py
+### Database configuration
 
 - install postgresql
 - Create a postgresql database for this project
-- Change the DATABASES settings relatively. See https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+- In VueCrypto/settings.py,Change the DATABASES settings relatively. See https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-### 
+### specific configs
+
+A configs.sample file is provided. You must set the provided variables to have a working configuration.
+When this is done, the file must be renamed configs.py
 
 ### In root directory:
 
