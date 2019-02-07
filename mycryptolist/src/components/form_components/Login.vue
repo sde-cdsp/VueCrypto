@@ -20,7 +20,7 @@
 <script>
 
     import axios from 'axios';
-    import Form from '../utils/utils.js'
+    import Form from '../../utils/utils.js'
 
     class LoginForm extends Form {
         constructor(data) {

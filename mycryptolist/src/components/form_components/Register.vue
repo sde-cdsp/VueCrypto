@@ -14,7 +14,7 @@
 
 <script>
 
-    import Form from '../utils/utils.js'
+    import Form from '../../utils/utils.js'
     import axios from 'axios'
 
     class RegisterForm extends Form {

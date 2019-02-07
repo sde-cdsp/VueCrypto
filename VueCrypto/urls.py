@@ -30,5 +30,5 @@ urlpatterns = [
     path('logout/', LogoutUser.as_view()),
     path('<int:id>/<str:name>', add_crypto),
     path('user_crypto', UserCrypto.as_view()),
-    path('remove_cryptos', RemoveCrypto.as_view()),
+    path('remove_crypto', RemoveCrypto.as_view()),
 ]

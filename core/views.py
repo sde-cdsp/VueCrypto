@@ -11,7 +11,7 @@ from django.core.mail import send_mail
 from django.db import IntegrityError
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
 from django.views.generic import TemplateView
 
 from core.models import ResetPassword, CryptoUser, Crypto
@@ -133,10 +133,10 @@ class PasswordResetView(IndexView):
 def add_crypto(request, user_id, crypto_name):
     return
 
-
 class UserCrypto(IndexView):
     CMC_ENDPOINT = 'v1/cryptocurrency/info'
 
+    @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         if request.user.is_anonymous:
             return self.render_to_json()
@@ -184,6 +184,9 @@ class UserCrypto(IndexView):
 
 
 class RemoveCrypto(IndexView):
-    def get(self, request, *args, **kwargs):
+    def post(self, request):
+        cu = CryptoUser.objects.get(user=request.user, crypto__symbol=request.POST.get('symbol'))
+        cu.delete()
         return self.render_to_json()
+
 

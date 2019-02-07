@@ -1,9 +1,10 @@
 <template>
     <div class="password_form">
-        <span>An email will be sent to the email associated with your username.</span>
-        <input type="text" id="newpassword" name="newpassword" placeholder="Your username" v-model="form.username">
+        <span>Hi {{this.form.username}}. Change your password.</span>
+        <input type="password" id="new_password1" name="new_password1" placeholder="Password" v-model="form.new_password1">
+        <input type="password" id="new_password2" name="new_password2" placeholder="Confirm password" v-model="form.new_password2">
         <span id="error-login" class="form-error is-visible" v-text="this.form.errorstoString()"></span>
-        <div class="btn btn-lg ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="askReset">Submit
+        <div class="btn btn-lg ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="resetPassword">Reset
             <div id="register-button" type="submit" class="ld ld-ring ld-spin"></div>
         </div>
         <router-link style="float: right;" to="/">back to login</router-link>
@@ -12,31 +13,38 @@
 
 <script>
     import axios from 'axios';
-    import Form from '../utils/utils.js'
+    import Form from '../../utils/utils.js'
 
-    class AskPasswordResetForm extends Form {
+    class PasswordResetForm extends Form {
         constructor(data) {
             super(data);
         }
     }
 
     export default {
-        name: "AskPasswordReset",
+        name: "PasswordReset",
         data: () => {
             return {
-                form: new AskPasswordResetForm({
+                form: new PasswordResetForm({
                     username: '',
+                    key: '',
+                    new_password1: '',
+                    new_password2: ''
                 }),
             }
         },
+        created() {
+            this.form.username = this.$route.query.username;
+            this.form.key = this.$route.query.key;
+        },
         methods: {
-            askReset() {
+            resetPassword() {
                 this.form.isLoading = true;
                 return axios.post('', this.form.userData(), this.form.headers())
                     .then(() => {
                         this.$notify({
                             group: 'notif',
-                            text: 'An email has been sent to the email associated with the username ' + this.form.username,
+                            text: 'Your password has been changed ' + this.form.username,
                             type: 'success'
                         });
                         this.$router.push('/');

@@ -7,11 +7,13 @@ from django.contrib.postgres.fields import JSONField
 from django.core import serializers
 from django.forms import model_to_dict
 
+def default_crypto_dict():
+    return {'website': '', 'twitter': '', 'reddit': '', 'source_code': ''}
 
 class Crypto(models.Model):
     name = models.CharField(max_length=64)
     symbol = models.CharField(max_length=8)
-    urls = JSONField(default={'website': '', 'twitter': '', 'reddit': '', 'source_code': ''})
+    urls = JSONField(default=default_crypto_dict)
     logo = models.URLField(default='')
 
     def as_json(self):
@@ -19,7 +21,7 @@ class Crypto(models.Model):
 
     @classmethod
     def default_url_keys(cls):
-        return cls._meta.get_field('urls').default.keys()
+        return cls._meta.get_field('urls').default().keys()
 
 
 class CryptoUser(models.Model):

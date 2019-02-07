@@ -10,7 +10,6 @@
                     <input class="button" type="submit" value="Search" @click.prevent="loadData">
                 </form>
             </div>
-            <!--<router-view :appUsername="username"></router-view>-->
             <router-view :username="username" @connect="onConnect"></router-view>
         </div>
 
@@ -31,6 +30,7 @@
 </template>
 
 <script>
+    import qs from 'qs'
     import Cryptocurrency from './components/Cryptocurrency.vue'
     // import CryptoList from './components/CryptoList.vue'
     import Vue from './main.js'
@@ -66,8 +66,16 @@
             cryptosReady() { // return array of cryptos that has actual data
                 return this.cryptos.filter(crypto => crypto.result.hasOwnProperty("PRICE"))
             },
-            userIsConnected() {
-                return this.username.length > 0
+            cryptoInList() {
+                if (this.getSymbols().includes(this.textSearch.toUpperCase())) {
+                    this.$notify({
+                        text: this.textSearch.toUpperCase() + ' already in your list!',
+                        type: 'warn',
+                        group: 'notif'
+                    });
+                    return true;
+                }
+                return false;
             }
         },
         methods: {
@@ -77,22 +85,20 @@
                     symbols.push(obj['symbol'])
                 return symbols
             },
-            addCrypto(symbol) {
-                this.axios.push('add_crypto/', {
-                    symbol: symbol
-                })
+            addCryptoBackend(crypto) {
+                this.axios.post('user_crypto',
+                    qs.stringify({symbol: crypto['symbol']}),
+                    {headers: {
+                            'X-CSRFToken': window.$cookies.get('csrftoken'),
+                            'Content-Type': 'application/x-www-form-urlencoded'}
+                    }
+                )
             },
             loadData() {
-                if (this.getSymbols().includes(this.textSearch.toUpperCase())) {
-                    this.$notify({
-                        text: this.textSearch.toUpperCase() + ' already in your list!',
-                        type: 'warn',
-                        group: 'notif'
-                    });
+                if (this.cryptoInList)
                     return;
-                }
-                this.axios.get(api_url_default, {
-                    params: {
+                this.axios.get(api_url_default,
+                    {params: {
                         fsyms: this.textSearch.toUpperCase()
                     }
                 }).then(response => {
@@ -113,18 +119,27 @@
                         obj['result'] = obj['USD'];
                         delete obj['USD'];
                         this.cryptos.push(obj);
+                        this.addCryptoBackend(obj);
                         this.textSearch = "";
                     }
                 })
             },
             deleteCrypto(crypto) {
-                Vue.delete(this.cryptos, crypto);
                 this.cryptos = this.cryptos.filter(ee => ee !== crypto);
-                this.$notify({
-                    text: crypto['symbol'] + ' deleted',
-                    type: 'success',
-                    group: 'notif'
-                });
+                this.axios.post(
+                    'remove_crypto',
+                    qs.stringify({symbol: crypto['symbol']}),
+                    {headers: {
+                            'X-CSRFToken': window.$cookies.get('csrftoken'),
+                            'Content-Type': 'application/x-www-form-urlencoded'}
+                    }
+                ).then(() =>
+                    this.$notify({
+                        text: crypto['symbol'] + ' deleted',
+                        type: 'success',
+                        group: 'notif'
+                    })
+                )
             },
             refreshData() {
                 this.axios.get(api_url_default, {
@@ -142,10 +157,10 @@
                 })
             },
             initData() {
+                this.cryptos = [];
                 this.axios.get('user_crypto')
                 .then(response => {
                     if(response.data['username']) {
-                        this.cryptos = [];
                         for (let symbol of response.data['symbols'])
                             this.cryptos.push({'symbol': symbol, 'result': {}});
                         }

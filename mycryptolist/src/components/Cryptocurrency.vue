@@ -6,7 +6,16 @@
         </span>
         <span display="isReady" :style="{color: dayChangeColor}">{{ change24Hour }}%</span>
         <span>{{ socials }}</span>
-        <span><a class="box-delete" href="#" @click="$emit('delete', symbol)">x</a></span>
+        <v-btn color="blue" dark @click="dialog = true">X</v-btn>
+        <v-dialog v-model="dialog" max-width="290">
+            <v-card>
+                <v-card-title class="headline">Delete {{symbol}} from your list?</v-card-title>
+                <v-card-actions>
+                    <v-btn color="red darken-1" flat="flat" @click="dialog = false">Cancel</v-btn>
+                    <v-btn color="green darken-1" flat="flat" @click="deleteCrypto(symbol)">Confirm</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -18,7 +27,8 @@
 
         data: function () {
             return {
-                'coinUp': undefined,
+                coinUp: undefined,
+                dialog: false
             };
         },
 
@@ -51,7 +61,11 @@
         },
         methods: {
             roundPrice: (p, n) => Number(p.toPrecision(n)),
-            // deleteCrypto() {}
+
+            deleteCrypto(symbol) {
+                this.dialog = false;
+                this.$emit('delete', symbol);
+            }
         }
     };
 </script>
