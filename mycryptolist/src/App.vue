@@ -22,8 +22,9 @@
         </div>
         <div v-for="crypto in cryptosReady" v-bind:key="crypto.symbol">
             <div class="card" :id="crypto.symbol">
-                <cryptocurrency :result="crypto.result" :symbol="crypto.symbol"
-                                @delete="deleteCrypto(crypto)"></cryptocurrency>
+                <cryptocurrency :result="crypto.result" :symbol="crypto.symbol" :logo="crypto.logo" :socials="crypto.socials"
+                                @delete="deleteCrypto(crypto)">
+                </cryptocurrency>
             </div>
         </div>
     </div>
@@ -57,7 +58,7 @@
             });
         },
         mounted() {
-            !this.cryptosEmpty && setInterval(() => this.refreshData(), 20000);
+            setInterval(() => this.refreshData(), 20000);
         },
         computed: {
             cryptosEmpty() {
@@ -95,6 +96,13 @@
                 )
             },
             loadData() {
+                this.loadApiData();
+                this.loadBackendData();
+            },
+            loadBackendData() {
+
+            },
+            loadApiData() {
                 if (this.cryptoInList)
                     return;
                 this.axios.get(api_url_default,
@@ -125,7 +133,9 @@
                 })
             },
             deleteCrypto(crypto) {
+                // delete on the frontend
                 this.cryptos = this.cryptos.filter(ee => ee !== crypto);
+                // delete on the backend
                 this.axios.post(
                     'remove_crypto',
                     qs.stringify({symbol: crypto['symbol']}),
@@ -147,6 +157,7 @@
                         fsyms: this.getSymbols().join()
                     }
                 }).then(response => {
+                    // FIXME add data from Backend in this.cryptos
                     this.cryptos = [];
                     for (let obj of Object.values(response.data.RAW)) {
                         obj['symbol'] = obj['USD']['FROMSYMBOL'];
@@ -161,8 +172,9 @@
                 this.axios.get('user_crypto')
                 .then(response => {
                     if(response.data['username']) {
-                        for (let symbol of response.data['symbols'])
-                            this.cryptos.push({'symbol': symbol, 'result': {}});
+                        console.log(response.data)
+                        for (let crypto of response.data['cryptos'])
+                            this.cryptos.push({'symbol': crypto['symbol'], 'socials': crypto['socials'], 'logo': crypto['logo'], 'result': {}});
                         }
                 })
                 .finally(() => {

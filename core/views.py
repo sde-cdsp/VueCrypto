@@ -143,8 +143,9 @@ class UserCrypto(IndexView):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        symbols = CryptoUser.objects.filter(user=request.user).values_list('crypto__symbol', flat=True)
-        return self.render_to_json({'symbols': list(symbols)})
+        cryptos = Crypto.objects.filter(id__in=CryptoUser.objects.filter(user=request.user).values_list('crypto_id'))
+        data = [crypto.as_json() for crypto in cryptos]
+        return self.render_to_json({'cryptos': data})
 
     def post(self, request):
         def data_crypto(data):

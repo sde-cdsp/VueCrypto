@@ -1,12 +1,16 @@
 <template>
     <div class="coin-container">
-        <span style="font-weight: bold"> {{ symbol }}</span>
+        <span style="font-weight: bold"> {{ symbol }} {{ logo }}</span>
         <span>
             <span display="isReady" class="price" :class="coinClass">{{ price }}$</span>
         </span>
         <span display="isReady" :style="{color: dayChangeColor}">{{ change24Hour }}%</span>
-        <span>{{ socials }}</span>
-        <v-btn color="blue" dark @click="dialog = true">X</v-btn>
+        <span>
+            <div v-for="social in socials">
+                <v-img :src=social></v-img>
+            </div>
+        </span>
+        <v-btn color="blue" dark @click="dialog = true" small>X</v-btn>
         <v-dialog v-model="dialog" max-width="290">
             <v-card>
                 <v-card-title class="headline">Delete {{symbol}} from your list?</v-card-title>
@@ -23,7 +27,7 @@
     export default {
         name: "Cryptocurrency",
 
-        props: ['symbol', 'result'],
+        props: ['symbol', 'result', 'logo', 'socials'],
 
         data: function () {
             return {
