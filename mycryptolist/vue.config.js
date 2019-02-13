@@ -3,7 +3,7 @@
 const BundleTracker = require("webpack-bundle-tracker");
 // const webpack = require("webpack");
 
-module.exports = {
+export default {
     publicPath: "http://0.0.0.0:8080/",
     outputDir: './dist/',
 

@@ -176,12 +176,11 @@ class UserCrypto(IndexView):
             headers={'X-CMC_PRO_API_KEY': configs.CMC_KEY}
         )
         response = r.json()
-
         crypto = data_crypto(response['data'][symbol])
         c = get_or_create_crypto(crypto)
         add_user(c)
 
-        return self.render_to_json(response)
+        return self.render_to_json(c.as_json())
 
 
 class RemoveCrypto(IndexView):

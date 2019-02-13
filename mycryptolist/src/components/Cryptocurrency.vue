@@ -1,14 +1,12 @@
 <template>
     <div class="coin-container">
-        <span style="font-weight: bold"> {{ symbol }} {{ logo }}</span>
+        <span style="font-weight: bold"> {{ symbol }}<img :src="logo"/></span>
         <span>
             <span display="isReady" class="price" :class="coinClass">{{ price }}$</span>
         </span>
         <span display="isReady" :style="{color: dayChangeColor}">{{ change24Hour }}%</span>
         <span>
-            <div v-for="social in socials">
-                <v-img :src=social></v-img>
-            </div>
+            <a v-for="(url, url_type) in urls" :href="url" style="margin-right: 2px;" :title="url_type"><img style="max-height: 1.5em; object-fit: fill;" :src=getImage(url_type)></a>
         </span>
         <v-btn color="blue" dark @click="dialog = true" small>X</v-btn>
         <v-dialog v-model="dialog" max-width="290">
@@ -24,10 +22,12 @@
 </template>
 
 <script>
+    import publicPath from '../../vue.config'
+
     export default {
         name: "Cryptocurrency",
 
-        props: ['symbol', 'result', 'logo', 'socials'],
+        props: ['symbol', 'result', 'logo', 'urls'],
 
         data: function () {
             return {
@@ -69,6 +69,10 @@
             deleteCrypto(symbol) {
                 this.dialog = false;
                 this.$emit('delete', symbol);
+            },
+            getImage(url_type) {
+                return `${publicPath.publicPath}img/${url_type}.png`
+                return '../../public/img/' + url_type + '.png'
             }
         }
     };

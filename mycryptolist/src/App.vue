@@ -20,12 +20,10 @@
             <span>Socials</span>
             <span>Action</span>
         </div>
-        <div v-for="crypto in cryptosReady" v-bind:key="crypto.symbol">
-            <div class="card" :id="crypto.symbol">
-                <cryptocurrency :result="crypto.result" :symbol="crypto.symbol" :logo="crypto.logo" :socials="crypto.socials"
-                                @delete="deleteCrypto(crypto)">
-                </cryptocurrency>
-            </div>
+        <div v-for="(crypto, symbol) in cryptos" v-bind:key="symbol" class="card">
+            <cryptocurrency :result="crypto.result" :symbol="crypto.symbol" :logo="crypto.logo" :urls="crypto.urls"
+                            @delete="deleteCrypto(symbol)">
+            </cryptocurrency>
         </div>
     </div>
 </template>
@@ -48,7 +46,7 @@
                 username: "",
                 textSearch: "",
                 // cryptos: [{symbol: 'BTC', result: {}}, {symbol: 'NANO', result: {}}],
-                cryptos: [],
+                cryptos: {},
             }
         },
         created() {
@@ -62,52 +60,61 @@
         },
         computed: {
             cryptosEmpty() {
-                return this.cryptos.length === 0;
+                return Object.keys(this.cryptos).length === 0;
             },
             cryptosReady() { // return array of cryptos that has actual data
-                return this.cryptos.filter(crypto => crypto.result.hasOwnProperty("PRICE"))
+                if (!this.cryptosEmpty)
+                    return this.cryptos;
+                return {};
             },
-            cryptoInList() {
-                if (this.getSymbols().includes(this.textSearch.toUpperCase())) {
+        },
+        methods: {
+            getSymbols() {
+                return Object.keys(this.cryptos)
+            },
+            cryptoInList(symbol) {
+                if (this.getSymbols().includes(symbol)) {
                     this.$notify({
-                        text: this.textSearch.toUpperCase() + ' already in your list!',
+                        text: symbol + ' already in your list!',
                         type: 'warn',
                         group: 'notif'
                     });
                     return true;
                 }
                 return false;
-            }
-        },
-        methods: {
-            getSymbols() {
-                let symbols = [];
-                for (let obj of this.cryptos)
-                    symbols.push(obj['symbol'])
-                return symbols
-            },
-            addCryptoBackend(crypto) {
-                this.axios.post('user_crypto',
-                    qs.stringify({symbol: crypto['symbol']}),
-                    {headers: {
-                            'X-CSRFToken': window.$cookies.get('csrftoken'),
-                            'Content-Type': 'application/x-www-form-urlencoded'}
-                    }
-                )
             },
             loadData() {
-                this.loadApiData();
-                this.loadBackendData();
-            },
-            loadBackendData() {
-
-            },
-            loadApiData() {
-                if (this.cryptoInList)
+                let symbol = this.textSearch.toUpperCase()
+                if (this.cryptoInList(symbol))
                     return;
+                this.loadBackendData(symbol)
+                .then(() => this.loadApiData(symbol))
+            },
+            loadBackendData(symbol) {
+                return new Promise((resolve, reject) => {
+                    this.axios.post('user_crypto',
+                        qs.stringify({symbol: symbol}),
+                        {
+                            headers: {
+                                'X-CSRFToken': window.$cookies.get('csrftoken'),
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            }
+                        }
+                    ).then((response) => {
+                        console.log(response);
+                        this.cryptos[symbol] = {
+                            urls: response['urls'],
+                            logo: response['logo'],
+                            symbol: symbol,
+                        };
+                        resolve()
+                    })
+                });
+            },
+            loadApiData(symbol) {
                 this.axios.get(api_url_default,
                     {params: {
-                        fsyms: this.textSearch.toUpperCase()
+                        fsyms: symbol
                     }
                 }).then(response => {
                     if (response.data["Response"] === "Error")
@@ -123,29 +130,28 @@
                                 group: 'notif'
                             });
                         let obj = Object.values(response.data.RAW)[0];
-                        obj['symbol'] = obj['USD']['FROMSYMBOL'];
-                        obj['result'] = obj['USD'];
-                        delete obj['USD'];
-                        this.cryptos.push(obj);
-                        this.addCryptoBackend(obj);
+                        let symbol = obj['USD']['FROMSYMBOL'];
+                        let result = obj['USD'];
+                        this.cryptos[symbol]['result'] = result;
+                        this.cryptos[symbol]['symbol'] = symbol;
                         this.textSearch = "";
                     }
                 })
             },
             deleteCrypto(crypto) {
                 // delete on the frontend
-                this.cryptos = this.cryptos.filter(ee => ee !== crypto);
+                Vue.delete(this.cryptos, crypto);
                 // delete on the backend
                 this.axios.post(
                     'remove_crypto',
-                    qs.stringify({symbol: crypto['symbol']}),
+                    qs.stringify({symbol: crypto}),
                     {headers: {
                             'X-CSRFToken': window.$cookies.get('csrftoken'),
                             'Content-Type': 'application/x-www-form-urlencoded'}
                     }
                 ).then(() =>
                     this.$notify({
-                        text: crypto['symbol'] + ' deleted',
+                        text: crypto + ' deleted',
                         type: 'success',
                         group: 'notif'
                     })
@@ -158,24 +164,21 @@
                     }
                 }).then(response => {
                     // FIXME add data from Backend in this.cryptos
-                    this.cryptos = [];
                     for (let obj of Object.values(response.data.RAW)) {
-                        obj['symbol'] = obj['USD']['FROMSYMBOL'];
-                        obj['result'] = obj['USD'];
-                        delete obj['USD'];
-                        this.cryptos.push(obj);
+                        let result = obj['USD'];
+                        let toUpdate = this.cryptos[result['FROMSYMBOL']];
+                        Object.assign(toUpdate, {symbol: result['FROMSYMBOL'], result: result});
+                        this.$set(this.cryptos, 'symbol', toUpdate);
                     }
                 })
             },
             initData() {
-                this.cryptos = [];
                 this.axios.get('user_crypto')
                 .then(response => {
                     if(response.data['username']) {
-                        console.log(response.data)
                         for (let crypto of response.data['cryptos'])
-                            this.cryptos.push({'symbol': crypto['symbol'], 'socials': crypto['socials'], 'logo': crypto['logo'], 'result': {}});
-                        }
+                            this.cryptos[crypto['symbol']] = {'symbol': crypto['symbol'], 'urls': crypto['urls'], 'logo': crypto['logo'], 'result': {}};
+                    }
                 })
                 .finally(() => {
                     if (!this.cryptosEmpty)
@@ -184,7 +187,7 @@
             },
             onConnect(username) {
                 this.username = username;
-                this.initData();
+                this.refreshData();
             }
         }
     }
