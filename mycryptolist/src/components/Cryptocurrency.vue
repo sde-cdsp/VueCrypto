@@ -1,14 +1,14 @@
 <template>
-    <div class="coin-container">
-        <span style="font-weight: bold"> {{ symbol }}<img :src="logo"/></span>
-        <span>
+    <tr>
+        <td style="font-weight: bold"> {{ symbol }}<img :src="logo"/></td>
+        <td>
             <span display="isReady" class="price" :class="coinClass">{{ price }}$</span>
-        </span>
-        <span display="isReady" :style="{color: dayChangeColor}">{{ change24Hour }}%</span>
-        <span>
+        </td>
+        <td display="isReady" :style="{color: dayChangeColor}">{{ change24Hour }}%</td>
+        <td>
             <a v-for="(url, url_type) in urls" :href="url" style="margin-right: 2px;" :title="url_type"><img style="max-height: 1.5em; object-fit: fill;" :src=getImage(url_type)></a>
-        </span>
-        <v-btn color="blue" dark @click="dialog = true" small>X</v-btn>
+        </td>
+        <td><v-btn color="blue" dark @click="dialog = true" small>X</v-btn></td>
         <v-dialog v-model="dialog" max-width="290">
             <v-card>
                 <v-card-title class="headline">Delete {{symbol}} from your list?</v-card-title>
@@ -18,7 +18,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-    </div>
+    </tr>
 </template>
 
 <script>

@@ -13,18 +13,22 @@
             <router-view :username="username" @connect="onConnect"></router-view>
         </div>
 
-        <div class="headers">
-            <span>Coin</span>
-            <span>Price</span>
-            <span>24 hours change</span>
-            <span>Socials</span>
-            <span>Action</span>
-        </div>
-        <div v-for="(crypto, symbol) in cryptos" v-bind:key="symbol" class="card">
-            <cryptocurrency :result="crypto.result" :symbol="crypto.symbol" :logo="crypto.logo" :urls="crypto.urls"
-                            @delete="deleteCrypto(symbol)">
-            </cryptocurrency>
-        </div>
+        <!--<v-data-table :headers="headers" :items="desserts" class="elevation-1">-->
+        <table class="">
+            <thead>
+                <tr class="headers">
+                    <th>Coin</th>
+                    <th>Price</th>
+                    <th>24 hours change</th>
+                    <th>Socials</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <cryptocurrency v-for="(crypto, symbol) in cryptos" :key="symbol" class="row-coin" :result="crypto.result" :symbol="crypto.symbol" :logo="crypto.logo" :urls="crypto.urls" @delete="deleteCrypto(symbol)">
+                </cryptocurrency>
+            </tbody>
+        </table>
     </div>
 </template>
 
@@ -175,6 +179,7 @@
             initData() {
                 this.axios.get('user_crypto')
                 .then(response => {
+                    this.cryptos = {};
                     if(response.data['username']) {
                         for (let crypto of response.data['cryptos'])
                             this.cryptos[crypto['symbol']] = {'symbol': crypto['symbol'], 'urls': crypto['urls'], 'logo': crypto['logo'], 'result': {}};
@@ -187,7 +192,7 @@
             },
             onConnect(username) {
                 this.username = username;
-                this.refreshData();
+                this.initData();
             }
         }
     }

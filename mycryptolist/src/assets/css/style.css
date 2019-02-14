@@ -24,8 +24,7 @@ body {
     border-bottom: 1px dotted;
 }
 
-.card {
-    display: flex;
+.row-coin {
     margin-bottom: 0.2rem;
     border: transparent;
     border-bottom: 1px solid #e6e6e6;
@@ -36,21 +35,8 @@ body {
     color: white;
     font-size: large;
     margin-bottom: 10px;
-    display: flex;
     width: 100%;
-    justify-content: space-between;
-    padding: 5px;
-}
-
-.coin-container{
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: 5px;
-}
-
-.coin-container > span {
-    display: flex;
+    padding: 15px;
 }
 
 .coin-up {
