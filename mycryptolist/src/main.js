@@ -6,6 +6,7 @@ import './assets/css/foundation.min.css'
 import './assets/css/style.css'
 import './assets/css/loading-btn.css'
 import './assets/css/loading.css'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import VueRouter from 'vue-router'
 
 import App from './App.vue'

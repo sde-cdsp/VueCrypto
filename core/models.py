@@ -32,6 +32,11 @@ class CryptoUser(models.Model):
     bought_value = models.FloatField(null=True)
     sell_value = models.FloatField(null=True)
 
+    def as_json(self):
+        data = model_to_dict(self)
+        data.update(self.crypto.as_json())
+        return data
+
     class Meta:
         unique_together = (('user', 'crypto'))
 

@@ -31,4 +31,5 @@ urlpatterns = [
     path('<int:id>/<str:name>', add_crypto),
     path('user_crypto', UserCrypto.as_view()),
     path('remove_crypto', RemoveCrypto.as_view()),
+    path('favorite_crypto', FavoriteCrypto.as_view()),
 ]

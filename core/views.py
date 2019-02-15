@@ -143,7 +143,7 @@ class UserCrypto(IndexView):
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        cryptos = Crypto.objects.filter(id__in=CryptoUser.objects.filter(user=request.user).values_list('crypto_id'))
+        cryptos = CryptoUser.objects.filter(user=request.user)
         data = [crypto.as_json() for crypto in cryptos]
         return self.render_to_json({'cryptos': data})
 
@@ -188,5 +188,13 @@ class RemoveCrypto(IndexView):
         cu = CryptoUser.objects.get(user=request.user, crypto__symbol=request.POST.get('symbol'))
         cu.delete()
         return self.render_to_json()
+
+class FavoriteCrypto(IndexView):
+    def post(self, request):
+        cu = CryptoUser.objects.get(user=request.user, crypto__symbol=request.POST.get('symbol'))
+        cu.favorite = not cu.favorite
+        cu.save()
+        return self.render_to_json()
+
 
 

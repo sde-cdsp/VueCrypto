@@ -14,18 +14,18 @@
         </div>
 
         <!--<v-data-table :headers="headers" :items="desserts" class="elevation-1">-->
-        <table class="">
+        <table class="unstriped">
             <thead>
                 <tr class="headers">
                     <th>Coin</th>
                     <th>Price</th>
                     <th>24 hours change</th>
                     <th>Socials</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                <cryptocurrency v-for="(crypto, symbol) in cryptos" :key="symbol" class="row-coin" :result="crypto.result" :symbol="crypto.symbol" :logo="crypto.logo" :urls="crypto.urls" @delete="deleteCrypto(symbol)">
+                <cryptocurrency v-for="(crypto, symbol) in cryptos" class="row-coin" :favorite="crypto.favorite" :result="crypto.result" :symbol="crypto.symbol" :logo="crypto.logo" :urls="crypto.urls" @delete="deleteCrypto(symbol)">
                 </cryptocurrency>
             </tbody>
         </table>
@@ -172,8 +172,8 @@
                         let result = obj['USD'];
                         let toUpdate = this.cryptos[result['FROMSYMBOL']];
                         Object.assign(toUpdate, {symbol: result['FROMSYMBOL'], result: result});
-                        this.$set(this.cryptos, 'symbol', toUpdate);
                     }
+                    this.$forceUpdate();
                 })
             },
             initData() {
@@ -182,7 +182,12 @@
                     this.cryptos = {};
                     if(response.data['username']) {
                         for (let crypto of response.data['cryptos'])
-                            this.cryptos[crypto['symbol']] = {'symbol': crypto['symbol'], 'urls': crypto['urls'], 'logo': crypto['logo'], 'result': {}};
+                            this.cryptos[crypto['symbol']] = {
+                                'urls': crypto['urls'],
+                                'logo': crypto['logo'],
+                                'favorite': crypto['favorite'],
+                                'result': {}
+                            };
                     }
                 })
                 .finally(() => {
