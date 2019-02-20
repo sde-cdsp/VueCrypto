@@ -142,7 +142,7 @@
                             });
                     else {
                         this.$notify({
-                                text: this.textSearch + ' added',
+                                text: this.textSearch.toUpperCase() + ' added',
                                 type: 'success',
                                 group: 'notif'
                             });
@@ -213,7 +213,7 @@
                 this.initData();
             },
             switchFavorite(symbol) {
-                this.cryptos[symbol].favorite = !this.cryptos[symbol].favorite;
+                this.cryptosSelected[symbol].favorite = !this.cryptosSelected[symbol].favorite;
                 this.$forceUpdate();
             },
         }
