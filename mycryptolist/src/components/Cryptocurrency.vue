@@ -38,7 +38,6 @@
             return {
                 coinUp: undefined,
                 dialog: false,
-                isFavorite: this.favorite
             };
         },
 
@@ -61,10 +60,10 @@
                     return "coin-down";
             },
             favoriteClass() {
-                return this.isFavorite ? "star" : "star_border";
+                return this.favorite ? "star" : "star_border";
             },
             favoriteTitle() {
-                return this.isFavorite ? "Add to starred coins" : "Remove from starred coins";
+                return this.favorite ? "Add to starred coins" : "Remove from starred coins";
             },
             isReady() {
                 return this.result.hasOwnProperty("PRICE");
@@ -90,7 +89,7 @@
             switchFavorite() {
                 let form = new Form();
                 axios.post('favorite_crypto', qs.stringify({symbol: this.symbol}), form.headers())
-                .then(() => this.isFavorite = !this.isFavorite)
+                .then(() => this.$emit('switchFav', this.symbol))
             }
         }
     };

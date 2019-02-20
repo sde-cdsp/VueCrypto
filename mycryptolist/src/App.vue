@@ -13,7 +13,13 @@
             <router-view :username="username" @connect="onConnect"></router-view>
         </div>
 
-        <!--<v-data-table :headers="headers" :items="desserts" class="elevation-1">-->
+        <div>
+            <v-btn color="green" dark @click="favoriteOnly = !favoriteOnly">
+            <v-icon left dark large color="#FFDE03" v-text="favoriteClass"></v-icon>
+            {{ favoriteText }}
+            </v-btn>
+        </div>
+
         <table class="unstriped">
             <thead>
                 <tr class="headers">
@@ -25,7 +31,7 @@
                 </tr>
             </thead>
             <tbody>
-                <cryptocurrency v-for="(crypto, symbol) in cryptos" class="row-coin" :favorite="crypto.favorite" :result="crypto.result" :symbol="crypto.symbol" :logo="crypto.logo" :urls="crypto.urls" @delete="deleteCrypto(symbol)">
+                <cryptocurrency v-for="(crypto, symbol) in cryptosSelected" class="row-coin" :favorite="crypto.favorite" :result="crypto.result" :symbol="crypto.symbol" :logo="crypto.logo" :urls="crypto.urls" @delete="deleteCrypto(symbol)" @switchFav="switchFavorite(symbol)">
                 </cryptocurrency>
             </tbody>
         </table>
@@ -33,6 +39,7 @@
 </template>
 
 <script>
+    import _ from 'lodash'
     import qs from 'qs'
     import Cryptocurrency from './components/Cryptocurrency.vue'
     // import CryptoList from './components/CryptoList.vue'
@@ -49,8 +56,8 @@
             return {
                 username: "",
                 textSearch: "",
-                // cryptos: [{symbol: 'BTC', result: {}}, {symbol: 'NANO', result: {}}],
                 cryptos: {},
+                favoriteOnly: false
             }
         },
         created() {
@@ -66,11 +73,17 @@
             cryptosEmpty() {
                 return Object.keys(this.cryptos).length === 0;
             },
-            cryptosReady() { // return array of cryptos that has actual data
-                if (!this.cryptosEmpty)
-                    return this.cryptos;
-                return {};
+            favoriteClass() {
+                return this.favoriteOnly ? "star_border" : "star";
             },
+            favoriteText() {
+                return this.favoriteOnly ? "Show all" : "Show favorites";
+            },
+            cryptosSelected() {
+                if (!this.favoriteOnly)
+                    return this.cryptos;
+                return _.filter(this.cryptos, crypto => crypto['favorite'] === true);
+            }
         },
         methods: {
             getSymbols() {
@@ -198,7 +211,11 @@
             onConnect(username) {
                 this.username = username;
                 this.initData();
-            }
+            },
+            switchFavorite(symbol) {
+                this.cryptos[symbol].favorite = !this.cryptos[symbol].favorite;
+                this.$forceUpdate();
+            },
         }
     }
 </script>
