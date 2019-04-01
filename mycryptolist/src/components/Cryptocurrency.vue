@@ -1,19 +1,19 @@
 <template>
     <tr>
-        <td style="font-weight: bold"> {{ this.$attrs.symbol }}&nbsp;<img width="10%" :src="this.$attrs.logo"/></td>
+        <td style="font-weight: bold"> {{ symbol }}&nbsp;<img width="10%" :src="logo"/></td>
         <td>
             <span display="isReady" class="price" :class="coinClass">{{ price }}$</span>
         </td>
         <td display="isReady" :style="{color: dayChangeColor}">{{ change24Hour }}%</td>
         <td>
-            <a v-for="(url, url_type) in this.$attrs.urls" :href="url" style="margin-right: 2px;" :title="url_type"><img style="max-height: 1.5em; object-fit: fill;" :src=getImage(url_type)></a>
+            <a v-for="(url, url_type) in this.urls" :href="url" style="margin-right: 2px;" :title="url_type"><img style="max-height: 1.5em; object-fit: fill;" :src=getImage(url_type)></a>
         </td>
         <td><v-btn color="blue" dark @click="dialog = true" small title="Delete">X</v-btn>&nbsp;
             <v-icon dark color="#FFDE03" v-text="favoriteClass" @click="switchFavorite" :title="favoriteTitle"></v-icon>
         </td>
         <v-dialog v-model="dialog" max-width="290">
             <v-card>
-                <v-card-title class="headline">Delete {{ this.$attrs.symbol }} from your list?</v-card-title>
+                <v-card-title class="headline">Delete {{ symbol }} from your list?</v-card-title>
                 <v-card-actions>
                     <v-btn color="red darken-1" flat="flat" @click="dialog = false">Cancel</v-btn>
                     <v-btn color="green darken-1" flat="flat" @click="deleteCrypto">Confirm</v-btn>
@@ -31,6 +31,7 @@
 
     export default {
         name: "Cryptocurrency",
+        props: ["symbol", "favorite", "urls", "logo", "CHANGEPCT24HOUR", "CHANGE24HOUR", "PRICE"],
 
         data: function () {
             return {
@@ -41,13 +42,13 @@
 
         computed: {
             dayChangeColor() {
-                return (this.$attrs.result.CHANGE24HOUR > 0) ? "green" : "red";
+                return (this.CHANGE24HOUR > 0) ? "green" : "red";
             },
             change24Hour() {
-                return this.roundPrice(this.$attrs.result.CHANGEPCT24HOUR, 3);
+                return this.roundPrice(this.CHANGEPCT24HOUR, 3);
             },
             price() {
-                return this.roundPrice(this.$attrs.result.PRICE, 4);
+                return this.roundPrice(this.PRICE, 4);
             },
             coinClass() {
                 if (this.coinUp === undefined)
@@ -64,11 +65,11 @@
                 return this.favorite ? "Add to starred coins" : "Remove from starred coins";
             },
             isReady() {
-                return this.result.hasOwnProperty("PRICE");
+                return this.hasOwnProperty("PRICE");
             }
         },
         watch: {
-            'result.PRICE': function (val, oldVal) {
+            'PRICE': function (val, oldVal) {
                 this.coinUp = (oldVal === undefined) ? undefined : (val >= oldVal);
             }
         },
@@ -77,7 +78,7 @@
 
             deleteCrypto() {
                 this.dialog = false;
-                this.$emit('delete', this.$attrs.symbol);
+                this.$emit('delete', this.symbol);
             },
 
             getImage(url_type) {
@@ -86,8 +87,8 @@
 
             switchFavorite() {
                 let form = new Form();
-                axios.post('favorite_crypto', qs.stringify({symbol: this.$attrs.symbol}), form.headers())
-                .then(() => this.$emit('switchFav', this.$attrs.symbol))
+                axios.post('favorite_crypto', qs.stringify({symbol: this.symbol}), form.headers())
+                .then(() => this.$emit('switchFav', this.symbol))
             }
         }
     };

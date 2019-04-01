@@ -118,7 +118,6 @@
                             }
                         }
                     ).then((response) => {
-                        console.log(response);
                         this.cryptos[symbol] = {
                             urls: response['urls'],
                             logo: response['logo'],
@@ -148,8 +147,7 @@
                             });
                         let obj = Object.values(response.data.RAW)[0];
                         let symbol = obj['USD']['FROMSYMBOL'];
-                        let result = obj['USD'];
-                        this.cryptos[symbol] = result;
+                        this.cryptos[symbol] = obj['USD'];
                         this.cryptos[symbol]['symbol'] = symbol;
                         this.textSearch = "";
                     }
@@ -182,9 +180,9 @@
                 }).then(response => {
                     // FIXME add data from Backend in this.cryptos
                     for (let obj of Object.values(response.data.RAW)) {
-                        let result = obj['USD'];
-                        let toUpdate = this.cryptos[result['FROMSYMBOL']];
-                        Object.assign(toUpdate, {symbol: result['FROMSYMBOL'], result: result});
+                        let res = obj['USD'];
+                        let toUpdate = this.cryptos[res['FROMSYMBOL']];
+                        Object.assign(toUpdate, {symbol: res['FROMSYMBOL']}, res);
                     }
                     this.$forceUpdate();
                 })
@@ -199,7 +197,6 @@
                                 'urls': crypto['urls'],
                                 'logo': crypto['logo'],
                                 'favorite': crypto['favorite'],
-                                'result': {}
                             };
                     }
                 })
