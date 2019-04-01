@@ -175,6 +175,8 @@ class UserCrypto(IndexView):
             params=({'symbol': symbol}),
             headers={'X-CMC_PRO_API_KEY': configs.CMC_KEY}
         )
+        if r.status_code == 400:
+            return self.render_to_json({"Response": "Error"})
         response = r.json()
         crypto = data_crypto(response['data'][symbol])
         c = get_or_create_crypto(crypto)

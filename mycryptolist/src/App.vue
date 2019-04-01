@@ -31,7 +31,7 @@
                 </tr>
             </thead>
             <tbody>
-                <cryptocurrency v-for="(crypto, symbol) in cryptosSelected" class="row-coin" :favorite="crypto.favorite" :result="crypto.result" :symbol="crypto.symbol" :logo="crypto.logo" :urls="crypto.urls" @delete="deleteCrypto(symbol)" @switchFav="switchFavorite(symbol)">
+                <cryptocurrency v-for="(crypto, symbol) in cryptosSelected" class="row-coin" v-bind="crypto" @delete="deleteCrypto(symbol)" @switchFav="switchFavorite(symbol)">
                 </cryptocurrency>
             </tbody>
         </table>
@@ -149,7 +149,7 @@
                         let obj = Object.values(response.data.RAW)[0];
                         let symbol = obj['USD']['FROMSYMBOL'];
                         let result = obj['USD'];
-                        this.cryptos[symbol]['result'] = result;
+                        this.cryptos[symbol] = result;
                         this.cryptos[symbol]['symbol'] = symbol;
                         this.textSearch = "";
                     }
