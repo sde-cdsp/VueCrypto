@@ -1,10 +1,10 @@
 <template>
-    <div>About this app...</div>
+    <div>TOTO</div>
 </template>
 
 <script>
     export default {
-        name: "About"
+        name: "Crypto"
     }
 </script>
 

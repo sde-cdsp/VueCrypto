@@ -1,18 +1,21 @@
 <template>
-    <div class="login_form">
-        <div v-if="isConnected">
-            <span>Welcome {{username}}</span>&nbsp;<a style="float: right;" @click="logout">Log out</a>
-        </div>
-        <div v-else>
-            <router-link style="float: right" to="/register/">Register</router-link>
-            <input type="text" id="id_username" name="username" placeholder="Username" v-model="form.username">
-            <input type="password" id="id_password" name="password" placeholder="Password" v-model="form.password">
-            <span id="error-login" class="form-error is-visible" v-text="this.form.errorstoString()"></span>
-            <div class="btn btn-lg ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="login">Log in
-                <div id="login-button" type="submit" class="ld ld-ring ld-spin"></div>
+    <div>
+        <div class="login_form">
+            <div v-if="isConnected">
+                <span>Welcome {{username}}</span>&nbsp;<a style="float: right;" @click="logout">Log out</a>
             </div>
-            &nbsp;<router-link style="float: right;" to="/ask_password_reset/">Forgot your password?</router-link>
+            <div v-else>
+                <router-link style="float: right" to="/register/">Register</router-link>
+                <input type="text" id="id_username" name="username" placeholder="Username" v-model="form.username">
+                <input type="password" id="id_password" name="password" placeholder="Password" v-model="form.password">
+                <span id="error-login" class="form-error is-visible" v-text="this.form.errorstoString()"></span>
+                <div class="btn btn-lg ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="login">Log in
+                    <div id="login-button" type="submit" class="ld ld-ring ld-spin"></div>
+                </div>
+                &nbsp;<router-link style="float: right;" to="/ask_password_reset/">Forgot your password?</router-link>
+            </div>
         </div>
+        <router-view ref="cryptosection" :username="username"></router-view>
     </div>
 </template>
 
@@ -90,7 +93,6 @@
             login() {
                 this.form.login()
                     .then((response) => {
-                        // this.username = response.data['username']
                         this.$notify({
                             group: 'notif',
                             text: 'You are successfully logged in',

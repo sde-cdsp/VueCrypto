@@ -1,9 +1,10 @@
 <template>
     <tr>
-        <td style="font-weight: bold"> {{ symbol }}&nbsp;<img width="10%" :src="logo"/></td>
+        <td style="font-weight: bold"><router-link to="/coin">{{ symbol }}&nbsp</router-link><img width="10%" :src="logo"/></td>
         <td>
             <span display="isReady" class="price" :class="coinClass">{{ price }}$</span>
         </td>
+        <td>${{ marketCap }}</td>
         <td display="isReady" :style="{color: dayChangeColor}">{{ change24Hour }}%</td>
         <td>
             <a v-for="(url, url_type) in this.urls" :href="url" style="margin-right: 2px;" :title="url_type"><img style="max-height: 1.5em; object-fit: fill;" :src=getImage(url_type)></a>
@@ -28,10 +29,11 @@
     import Form from '../utils/utils.js'
     import qs from 'qs'
     import axios from 'axios';
+    import numeral from 'numeral'
 
     export default {
         name: "Cryptocurrency",
-        props: ["symbol", "favorite", "urls", "logo", "CHANGEPCT24HOUR", "CHANGE24HOUR", "PRICE"],
+        props: ["symbol", "favorite", "urls", "logo", "CHANGEPCT24HOUR", "CHANGE24HOUR", "PRICE", "MKTCAP"],
 
         data: function () {
             return {
@@ -41,6 +43,9 @@
         },
 
         computed: {
+            marketCap() {
+                return numeral(this.MKTCAP).format('0,0').replace(/,/g, ' ');
+            },
             dayChangeColor() {
                 return (this.CHANGE24HOUR > 0) ? "green" : "red";
             },
