@@ -13,7 +13,6 @@ import CryptoList from './components/CryptoList.vue'
 import Crypto from './components/Crypto.vue'
 import Cryptosection from './components/Cryptosection.vue'
 import App from './App.vue'
-import TemplateLogin from './components/form_components/TemplateLogin.vue'
 import Login from './components/form_components/Login.vue'
 import Register from './components/form_components/Register.vue'
 import AskPasswordReset from './components/form_components/AskPasswordReset.vue'
@@ -61,54 +60,7 @@ const routes = [
         path: '/register',
         component: Register
     }
-    // { path: '/login/', component: Login, name: "Login"},
-    // { path: '/register/', component: Register, name: "Register"},
-    // { path: '/ask_password_reset/', component: AskPasswordReset, name: "AskPasswordReset"},
-    // { path: '/password_reset/', component: PasswordReset, name: "PasswordReset"},
 ];
-
-
-
-// const routes = [
-//     {   path: '/',
-//         components: {
-//             cryptosection: Cryptosection,
-//             children: [
-//                 {
-//                     path: '',
-//                     component: CryptoList
-//                 },
-//                 {
-//                     path: 'coin',
-//                     component: Crypto
-//                 }
-//             ],
-//             // cryptolist: CryptoList,
-//             templatelogin: TemplateLogin,
-//             children: [
-//                 {
-//                     path: '',
-//                     component: Login
-//                 },
-//                 {
-//                     path: 'ask_password_reset',
-//                     component: AskPasswordReset
-//                 },
-//                 {
-//                     path: 'password_reset',
-//                     component: PasswordReset
-//                 },
-//                 {
-//                     path: 'register',
-//                     component: Register
-//                 }
-//             ]
-//         },
-//     },
-    // { path: '/register/', component: Register, name: 'Register' },
-    // { path: '/ask_password_reset/', component: AskPasswordReset, name: 'AskPasswordReset' },
-    // { path: '/password_reset/', component: PasswordReset, name: 'PasswordReset' },
-// ];
 
 const router = new VueRouter({
     mode: 'history',

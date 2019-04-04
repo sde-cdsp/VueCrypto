@@ -47,7 +47,7 @@
                 return numeral(this.MKTCAP).format('0,0').replace(/,/g, ' ');
             },
             dayChangeColor() {
-                return (this.CHANGE24HOUR > 0) ? "green" : "red";
+                return (this.CHANGE24HOUR > 0) ? "green" : "orangered";
             },
             change24Hour() {
                 return this.roundPrice(this.CHANGEPCT24HOUR, 3);
@@ -93,7 +93,15 @@
             switchFavorite() {
                 let form = new Form();
                 axios.post('favorite_crypto', qs.stringify({symbol: this.symbol}), form.headers())
-                .then(() => this.$emit('switchFav', this.symbol))
+                .then(() => {
+                    this.$emit('switchFav', this.symbol);
+                    let text = this.favorite ? `${this.symbol} removed from your favorite list` : `${this.symbol} added to your favorite list`;
+                    this.$notify({
+                        text: text,
+                        type: 'success',
+                        group: 'notif'
+                    });
+                })
             }
         }
     };

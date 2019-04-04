@@ -25,7 +25,7 @@
                 </tr>
             </thead>
             <tbody>
-                <Cryptorow v-for="(crypto, symbol) in cryptosSelected" class="row-coin" v-bind="crypto" @delete="deleteCrypto(symbol)" @switchFav="switchFavorite(symbol)">
+                <Cryptorow v-for="(crypto, symbol) in cryptosSelected" class="row-coin" :key="symbol" v-bind="crypto" @delete="deleteCrypto(symbol)" @switchFav="switchFavorite(symbol)">
                 </Cryptorow>
             </tbody>
         </table>
@@ -36,7 +36,6 @@
 import _ from 'lodash'
     import qs from 'qs'
     import Cryptorow from './Cryptorow.vue'
-    // import CryptoList from './components/CryptoList.vue'
     import Vue from '../main.js'
     const api_url_default = "https://min-api.cryptocompare.com/data/pricemultifull?tsyms=USD";
 
@@ -55,12 +54,13 @@ import _ from 'lodash'
             }
         },
         watch: {
-            username: function (val, oldVal) {
+            username: function () {
                 this.initData();
+                setInterval(() => this.refreshData(), 20000);
             },
         },
         mounted() {
-            setInterval(() => this.refreshData(), 20000);
+            this.initData();
         },
         computed: {
             cryptosEmpty() {
@@ -101,7 +101,7 @@ import _ from 'lodash'
                 .then(() => this.loadApiData(symbol))
             },
             loadBackendData(symbol) {
-                return new Promise((resolve, reject) => {
+                return new Promise((resolve) => {
                     this.axios.post('user_crypto',
                         qs.stringify({symbol: symbol}),
                         {
@@ -171,7 +171,7 @@ import _ from 'lodash'
                         fsyms: this.getSymbols().join()
                     }
                 }).then(response => {
-                    // FIXME add data from Backend in this.cryptos
+                    // FIXME add data from Backend in this.crypto
                     for (let obj of Object.values(response.data.RAW)) {
                         let res = obj['USD'];
                         let toUpdate = this.cryptos[res['FROMSYMBOL']];
