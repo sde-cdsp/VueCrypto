@@ -3,7 +3,7 @@
         <span>An email will be sent to the email associated with your username.</span>
         <input type="text" id="newpassword" name="newpassword" placeholder="Your username" v-model="form.username">
         <span id="error-login" class="form-error is-visible" v-text="this.form.errorstoString()"></span>
-        <div class="btn btn-lg ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="askReset">Submit
+        <div class="ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="askReset">Submit
             <div id="register-button" type="submit" class="ld ld-ring ld-spin"></div>
         </div>
         <router-link style="float: right;" to="/">back to login</router-link>

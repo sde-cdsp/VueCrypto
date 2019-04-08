@@ -6,7 +6,7 @@
         <input type="password" id="password1" name="password1" placeholder="Password" v-model="form.password1">
         <input type="password" id="password2" name="password2" placeholder="Confirm password" v-model="form.password2">
         <span id="error-login" class="form-error is-visible" v-text="this.form.errorstoString()"></span>
-        <div class="btn btn-lg ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="register">Register
+        <div class="ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="register">Register
             <div id="register-button" type="submit" class="ld ld-ring ld-spin"></div>
         </div>
     </div>

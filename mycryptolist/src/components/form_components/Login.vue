@@ -9,7 +9,7 @@
                 <input type="text" id="id_username" name="username" placeholder="Username" v-model="form.username">
                 <input type="password" id="id_password" name="password" placeholder="Password" v-model="form.password">
                 <span id="error-login" class="form-error is-visible" v-text="this.form.errorstoString()"></span>
-                <div class="btn btn-lg ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="login">Log in
+                <div class="ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="login">Log in
                     <div id="login-button" type="submit" class="ld ld-ring ld-spin"></div>
                 </div>
                 &nbsp;<router-link style="float: right;" to="/ask_password_reset/">Forgot your password?</router-link>

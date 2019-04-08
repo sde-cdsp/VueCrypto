@@ -1,10 +1,12 @@
 <template>
     <div>
         <div class="search_bar">
-            <form id="add_crypto" style="display: flex; align-items: center">
-                <input class="search" type="text" placeholder="Search cryptocurrency..." v-model="textSearch">
-                <input class="button" type="submit" value="Search" @click.prevent="loadData">
-            </form>
+            <div id="add_crypto" style="display: flex; align-items: center">
+                <input class="search" type="text" placeholder="Search cryptocurrency..." v-model="textSearch" @keyup.enter="loadData">
+                <div class="ld-ext-right button" v-bind:class="{'running': loading}" @click="loadData">Search
+                    <div class="ld ld-ring ld-spin" type="submit"></div>
+                </div>
+            </div>
         </div>
         <div>
             <v-btn color="green" dark @click="favoriteOnly = !favoriteOnly">
@@ -43,12 +45,12 @@ import _ from 'lodash'
         name: 'CryptoList',
         components: {
             Cryptorow,
-            // CryptoList,
         },
         props: ['username'],
         data: () => {
             return {
                 textSearch: "",
+                loading: false,
                 cryptos: {},
                 favoriteOnly: false
             }
@@ -94,56 +96,55 @@ import _ from 'lodash'
                 return false;
             },
             loadData() {
-                let symbol = this.textSearch.toUpperCase()
+                let symbol = this.textSearch.toUpperCase();
                 if (this.cryptoInList(symbol))
                     return;
+                this.loading = true;
                 this.loadBackendData(symbol)
                 .then(() => this.loadApiData(symbol))
+                .catch(() => {})
+                .finally(() => this.loading = false)
             },
             loadBackendData(symbol) {
-                return new Promise((resolve) => {
-                    this.axios.post('user_crypto',
-                        qs.stringify({symbol: symbol}),
-                        {
-                            headers: {
-                                'X-CSRFToken': window.$cookies.get('csrftoken'),
-                                'Content-Type': 'application/x-www-form-urlencoded'
-                            }
+                return this.axios.post('user_crypto',
+                    qs.stringify({symbol: symbol}),
+                    {
+                        headers: {
+                            'X-CSRFToken': window.$cookies.get('csrftoken'),
+                            'Content-Type': 'application/x-www-form-urlencoded'
                         }
-                    ).then((response) => {
-                        this.cryptos[symbol] = {
-                            urls: response['urls'],
-                            logo: response['logo'],
-                            symbol: symbol,
-                        };
-                        resolve()
-                    })
-                });
+                    }
+                ).then((response) => {
+                    this.cryptos[symbol] = {
+                        urls: response['data']['urls'],
+                        logo: response['data']['logo'],
+                        symbol: symbol,
+                    };
+                }).catch(() => {
+                    this.$notify({
+                            text: 'This cryptocurrency does not exist.',
+                            type: 'error',
+                            group: 'notif'
+                        });
+                    return Promise.reject();
+                    }
+                )
             },
             loadApiData(symbol) {
-                this.axios.get(api_url_default,
-                    {params: {
-                        fsyms: symbol
-                    }
-                }).then(response => {
-                    if (response.data["Response"] === "Error")
+                return this.axios.get(api_url_default,
+                    {params:
+                        {fsyms: symbol}
+                    }).then(response => {
                         this.$notify({
-                                text: 'This cryptocurrency does not exist.',
-                                type: 'error',
-                                group: 'notif'
-                            });
-                    else {
-                        this.$notify({
-                                text: this.textSearch.toUpperCase() + ' added',
-                                type: 'success',
-                                group: 'notif'
-                            });
+                            text: this.textSearch.toUpperCase() + ' added',
+                            type: 'success',
+                            group: 'notif'
+                        });
                         let obj = Object.values(response.data.RAW)[0];
                         let symbol = obj['USD']['FROMSYMBOL'];
-                        this.cryptos[symbol] = obj['USD'];
-                        this.cryptos[symbol]['symbol'] = symbol;
+                        let newCrypto = this.cryptos[symbol];
+                        Object.assign(newCrypto, obj['USD']);
                         this.textSearch = "";
-                    }
                 })
             },
             deleteCrypto(crypto) {
@@ -171,7 +172,6 @@ import _ from 'lodash'
                         fsyms: this.getSymbols().join()
                     }
                 }).then(response => {
-                    // FIXME add data from Backend in this.crypto
                     for (let obj of Object.values(response.data.RAW)) {
                         let res = obj['USD'];
                         let toUpdate = this.cryptos[res['FROMSYMBOL']];

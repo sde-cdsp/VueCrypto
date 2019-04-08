@@ -4,7 +4,7 @@
         <input type="password" id="new_password1" name="new_password1" placeholder="Password" v-model="form.new_password1">
         <input type="password" id="new_password2" name="new_password2" placeholder="Confirm password" v-model="form.new_password2">
         <span id="error-login" class="form-error is-visible" v-text="this.form.errorstoString()"></span>
-        <div class="btn btn-lg ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="resetPassword">Reset
+        <div class="ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="resetPassword">Reset
             <div id="register-button" type="submit" class="ld ld-ring ld-spin"></div>
         </div>
         <router-link style="float: right;" to="/">back to login</router-link>
