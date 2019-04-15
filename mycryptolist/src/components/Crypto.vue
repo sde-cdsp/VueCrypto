@@ -4,7 +4,8 @@
 
 <script>
     export default {
-        name: "Crypto"
+        name: "Crypto",
+        props: ['username']
     }
 </script>
 

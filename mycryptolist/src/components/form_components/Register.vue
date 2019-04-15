@@ -1,6 +1,7 @@
 <template>
+    <div class="text-center">
     <div class="register_form">
-        <router-link style="float: right" to="/">Back to login</router-link>
+        <router-link style="float: right" to="/login">Back to login</router-link>
         <input type="text" id="email" name="email" placeholder="Email" v-model="form.email">
         <input type="text" id="username" name="username" placeholder="Username" v-model="form.username">
         <input type="password" id="password1" name="password1" placeholder="Password" v-model="form.password1">
@@ -9,6 +10,7 @@
         <div class="ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="register">Register
             <div id="register-button" type="submit" class="ld ld-ring ld-spin"></div>
         </div>
+    </div>
     </div>
 </template>
 
@@ -47,7 +49,7 @@
                             text: 'You successfully registered as ' + this.form.username,
                             type: 'success'
                         });
-                    this.$router.push('/');
+                    this.$router.push('/login');
                 })
                 .catch(error => {
                     this.form.errors = error.response.data.error;

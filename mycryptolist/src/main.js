@@ -30,23 +30,24 @@ Vue.config.productionTip = false;
 const routes = [
     {
         path: '/',
-        component: Login,
+        component: Cryptosection,
+        meta: {
+            requiresAuth: true
+        },
         children: [
             {
                 path: '',
-                component: Cryptosection,
-                children: [
-                    {
-                        path: '',
-                        component: CryptoList
-                    },
-                    {
-                        path: 'coin',
-                        component: Crypto
-                    }
-                ]
+                component: CryptoList
+            },
+            {
+                path: 'coin',
+                component: Crypto
             }
         ]
+    },
+    {
+        path: '/login',
+        component: Login
     },
     {
         path: '/ask_password_reset',
@@ -63,7 +64,6 @@ const routes = [
 ];
 
 const router = new VueRouter({
-    mode: 'history',
     relative: true,
     routes: routes
 });

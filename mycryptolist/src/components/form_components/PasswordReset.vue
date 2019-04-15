@@ -1,4 +1,5 @@
 <template>
+    <div class="text-center">
     <div class="password_form">
         <span>Hi {{this.form.username}}. Change your password.</span>
         <input type="password" id="new_password1" name="new_password1" placeholder="Password" v-model="form.new_password1">
@@ -7,7 +8,8 @@
         <div class="ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="resetPassword">Reset
             <div id="register-button" type="submit" class="ld ld-ring ld-spin"></div>
         </div>
-        <router-link style="float: right;" to="/">back to login</router-link>
+        <router-link style="float: right;" to="/login">Back to login</router-link>
+    </div>
     </div>
 </template>
 
@@ -47,7 +49,7 @@
                             text: 'Your password has been changed ' + this.form.username,
                             type: 'success'
                         });
-                        this.$router.push('/');
+                        this.$router.push('/login');
                     })
                     .catch((error) => this.form.errors = error.response.data.error)
                     .finally(() => this.form.isLoading = false)

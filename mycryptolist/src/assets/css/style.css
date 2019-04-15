@@ -4,10 +4,9 @@ body {
 
 .login_form, .register_form, .password_form {
     width: 300px;
-    float: right;
 }
 
-.login_form, .register_form, .search_bar {
+.login_form, .register_form, .search_bar, .password_form {
     display: inline-block;
 }
 

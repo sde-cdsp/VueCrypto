@@ -92,7 +92,7 @@ class AskPasswordResetView(IndexView):
 
     def reset_password(self, request, user):
         rp = ResetPassword.objects.create(user=user)
-        full_url = ''.join(['http://', get_current_site(request).domain, '/password_reset?username=%s&key=%s' % (user.username, rp.key)])
+        full_url = ''.join(['http://', get_current_site(request).domain, '/#/password_reset?username=%s&key=%s' % (user.username, rp.key)])
         send_mail(subject="Reset Password Request", message="""Link to reset your password: %s""" % full_url, from_email=EMAIL_HOST_USER, recipient_list=[user.email])
 
     def post(self, request):

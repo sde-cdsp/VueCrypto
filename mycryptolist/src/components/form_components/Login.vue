@@ -1,21 +1,15 @@
 <template>
-    <div>
+    <div class="text-center">
         <div class="login_form">
-            <div v-if="isConnected">
-                <span>Welcome {{username}}</span>&nbsp;<a style="float: right;" @click="logout">Log out</a>
+            <router-link style="float: right" to="/register/">Register</router-link>
+            <input type="text" id="id_username" name="username" placeholder="Username" v-model="form.username">
+            <input type="password" id="id_password" name="password" placeholder="Password" v-model="form.password">
+            <span id="error-login" class="form-error is-visible" v-text="this.form.errorstoString()"></span>
+            <div class="ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="login">Log in
+                <div id="login-button" type="submit" class="ld ld-ring ld-spin"></div>
             </div>
-            <div v-else>
-                <router-link style="float: right" to="/register/">Register</router-link>
-                <input type="text" id="id_username" name="username" placeholder="Username" v-model="form.username">
-                <input type="password" id="id_password" name="password" placeholder="Password" v-model="form.password">
-                <span id="error-login" class="form-error is-visible" v-text="this.form.errorstoString()"></span>
-                <div class="ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="login">Log in
-                    <div id="login-button" type="submit" class="ld ld-ring ld-spin"></div>
-                </div>
-                &nbsp;<router-link style="float: right;" to="/ask_password_reset/">Forgot your password?</router-link>
-            </div>
+            &nbsp;<router-link style="float: right;" to="/ask_password_reset/">Forgot your password?</router-link>
         </div>
-        <router-view ref="cryptosection" :username="username"></router-view>
     </div>
 </template>
 
@@ -84,11 +78,6 @@
                 }),
             }
         },
-        computed: {
-            isConnected() {
-                return this.username.length > 0;
-            }
-        },
         methods: {
             login() {
                 this.form.login()
@@ -98,7 +87,8 @@
                             text: 'You are successfully logged in',
                             type: 'success'
                         });
-                        this.$emit('connect', response.data['username'])
+                        this.$emit('connect', response['data']['username']);
+                        this.$router.push({path: "/", query: {username: response['data']['username']}});
                     })
                     .catch(() => this.form.isLoading = false)
                     .finally(() => this.form.isLoading = false)
@@ -111,7 +101,8 @@
                             text: 'You are successfully logged out',
                             type: 'success'
                         });
-                        this.$emit('connect', response.data['username'])
+                        this.$emit('connect', response.data['username']);
+                        this.$router.push('/login')
                     })
                     .catch(() => this.form.isLoading = false)
                     .finally(() => this.form.isLoading = false)
