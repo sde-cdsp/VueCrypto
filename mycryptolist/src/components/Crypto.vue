@@ -1,5 +1,5 @@
 <template>
-    <div>TOTO</div>
+    <div>CRYPTO INFO</div>
 </template>
 
 <script>

@@ -50,10 +50,10 @@
                 return (this.CHANGE24HOUR > 0) ? "green" : "orangered";
             },
             change24Hour() {
-                return this.roundPrice(this.CHANGEPCT24HOUR, 3);
+                return this.CHANGEPCT24HOUR === undefined ? 0 : this.roundPrice(this.CHANGEPCT24HOUR, 3);
             },
             price() {
-                return this.roundPrice(this.PRICE, 4);
+                return this.PRICE === undefined ? 0 : this.roundPrice(this.PRICE, 4);
             },
             coinClass() {
                 if (this.coinUp === undefined)
