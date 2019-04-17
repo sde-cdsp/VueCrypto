@@ -22,4 +22,9 @@ docker run --rm -d \
            django_image:latest
 
 # vue application
-
+docker run --rm \
+           --name cryptovue \
+           --network crypto-net -p 8001:8001 \
+           --volume $(pwd)/mycryptolist:/mycryptolist \
+           vue_image:latest \
+           npm run serve

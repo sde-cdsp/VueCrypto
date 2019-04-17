@@ -42,7 +42,7 @@
         methods: {
             resetPassword() {
                 this.form.isLoading = true;
-                return axios.post('', this.form.userData(), this.form.headers())
+                return axios.post('password_reset/', this.form.userData(), this.form.headers())
                     .then(() => {
                         this.$notify({
                             group: 'notif',

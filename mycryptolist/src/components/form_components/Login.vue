@@ -2,8 +2,8 @@
     <div class="text-center">
         <div class="login_form">
             <router-link style="float: right" to="/register/">Register</router-link>
-            <input type="text" id="id_username" name="username" placeholder="Username" v-model="form.username">
-            <input type="password" id="id_password" name="password" placeholder="Password" v-model="form.password">
+            <input type="text" id="id_username" name="username" placeholder="Username" v-model="form.username" @keyup.enter="login">
+            <input type="password" id="id_password" name="password" placeholder="Password" v-model="form.password" @keyup.enter="login">
             <span id="error-login" class="form-error is-visible" v-text="this.form.errorstoString()"></span>
             <div class="ld-ext-right button" v-bind:class="{'running': form.isLoading}" :disabled=form.isFormDisabled() @click="login">Log in
                 <div id="login-button" type="submit" class="ld ld-ring ld-spin"></div>

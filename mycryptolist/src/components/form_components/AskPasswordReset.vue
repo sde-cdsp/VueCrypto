@@ -41,7 +41,7 @@
                             text: 'An email has been sent to the email associated with the username ' + this.form.username,
                             type: 'success'
                         });
-                        this.$router.push('/password_reset');
+                        this.$router.push('/login');
                     })
                     .catch((error) => this.form.errors = error.response.data.error)
                     .finally(() => this.form.isLoading = false)
