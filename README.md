@@ -1,14 +1,14 @@
 # My crypto list
 Experimental project with Django as a backend and VueJS as a frontend.
 ## Prerequisites
-###Docker installation
+### Docker installation
 This project is made to work with [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/).
 
-###Project configuration
-####Database setup
+### Project configuration
+#### Database setup
 You can set the database variables as you wish in the file *variables.env*
 
-####Other configs
+#### Other configs
 
 A *configs.sample.py* file is provided. You must set the provided variables to have a working configuration for several features to work.  
 When this is done, rename this file as *configs.py*
