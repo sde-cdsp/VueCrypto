@@ -1,43 +1,34 @@
-## Project setup
+# My crypto list
+Experimental project with Django as a backend and VueJS as a frontend.
+## Prerequisites
+###Docker installation
+This project is made to work with [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/).
 
-This project works with Django as a backend and VueJS as the frontend. Django is almost exclusively sending data as JSON (such as the user connected, cryptocurrencies infos...), whereas Vue handle them.
+###Project configuration
+####Database setup
+You can set the database variables as you wish in the file *variables.env*
 
-## VueJS part
+####Other configs
 
-### in mycryptolist directory:
+A *configs.sample.py* file is provided. You must set the provided variables to have a working configuration for several features to work.  
+When this is done, rename this file as *configs.py*
+
+
+## Create the docker images
+Generate the vue app image:
 ```
-npm install
+cd mycryptolist
+./dockbuild.sh
 ```
-
-### Compiles and hot-reloads for development
+Generate the django app image:
 ```
-npm run serve
-```
-
-## Django part
-
-### Database configuration
-
-- install postgresql
-- Create a postgresql database for this project
-- In *VueCrypto/settings.py*,Change the DATABASES settings relatively. See https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-### specific configs
-
-A *configs.sample.py* file is provided. You must set the provided variables to have a working configuration.
-When this is done, the file must be renamed *configs.py*
-
-### In root directory:
-
-Apply django migrations to populate the database:
-```
-python manage.py migrate
+cd ..
+./dockbuild.sh
 ```
 
-Run localhost server on port 8000:
+## Run the app
+The app will run after the containers are loaded. It might take a little while at first launch to install all required packages and retrieve the postgres database image.
 ```
-python manage.py runserver
+./dockrun.sh
 ```
-
-You are good to go !
-
+You can then visit **localhost:8000**
