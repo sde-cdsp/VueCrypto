@@ -6,11 +6,11 @@ This project is made to work with [Docker](https://docs.docker.com/install/linux
 
 ### Project configuration
 #### Database setup
-You can set the database variables as you wish in the file *variables.env*
+You can set the database variables as you wish in the *variables.env* file.
 
 #### Other configs
 
-A *configs.sample.py* file is provided. You must set the provided variables to have a working configuration for several features to work.  
+A *configs.sample.py* file is provided. You must set the provided variables for several features to work.  
 When this is done, rename this file as *configs.py*
 
 
