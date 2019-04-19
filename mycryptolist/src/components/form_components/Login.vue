@@ -88,7 +88,7 @@
                             type: 'success'
                         });
                         this.$emit('connect', response['data']['username']);
-                        this.$router.push({path: "/", query: {username: response['data']['username']}});
+                        this.$router.push({path: "/"});
                     })
                     .catch(() => this.form.isLoading = false)
                     .finally(() => this.form.isLoading = false)

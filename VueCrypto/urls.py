@@ -33,3 +33,5 @@ urlpatterns = [
     path('remove_crypto', RemoveCrypto.as_view()),
     path('favorite_crypto', FavoriteCrypto.as_view()),
 ]
+
+handler404 = NotFoundView.as_view()

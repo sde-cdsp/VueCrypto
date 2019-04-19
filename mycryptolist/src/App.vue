@@ -28,6 +28,7 @@
         data: () => {
             return {
                 username: "",
+                error: ""
             }
         },
         computed: {
@@ -35,7 +36,19 @@
                 return this.username.length > 0;
             }
         },
+        beforeMount() {
+            let error = document.getElementsByTagName('div')[0].getAttribute('data') || '';
+            this.error = error
+        },
         mounted() {
+            if (this.error === '404') {
+                this.$notify({
+                    group: 'notif',
+                    text: 'Page not found (404). You have been redirected',
+                    type: 'success'
+                });
+                this.error = ""
+            }
             this.axios.get('get_user_connected/').then(response => this.username = response['data']['username']);
         },
         methods: {

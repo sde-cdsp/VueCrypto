@@ -19,10 +19,10 @@ docker run --rm -d \
            --volume $(pwd):/vuecrypto \
            --entrypoint ./entrypoint.sh \
            -e POSTGRES_PASSWORD -e POSTGRES_DB -e POSTGRES_USER \
-           django_image:latest
+           django_image_2:latest
 
 # vue application
-docker run --rm \
+docker run --rm -d \
            --name cryptovue \
            --network crypto-net -p 8001:8001 \
            --volume $(pwd)/mycryptolist:/mycryptolist \

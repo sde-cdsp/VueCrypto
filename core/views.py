@@ -9,7 +9,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.core.mail import send_mail
 from django.db import IntegrityError
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
 from django.views.generic import TemplateView
@@ -25,9 +25,20 @@ ENDPOINT = 'v1/cryptocurrency/info'
 class IndexView(JSONResponseMixin, TemplateView):
     template_name = "application.html"
 
+    def get_context_data(self, **kwargs):
+        if self.request.session.pop('status', None) == 404:
+            kwargs.update({'status': 404})
+        return super().get_context_data(**kwargs)
+
     def render_to_json(self, context_data={}, status=200):
         context_data['username'] = self.request.user.username if not self.request.user.is_anonymous else ""
         return self.render_json_response(context_data, status)
+
+
+class NotFoundView(IndexView):
+    def get(self, *args, **kwargs):
+        self.request.session['status'] = 404
+        return redirect('app')
 
 
 class GetUser(IndexView):
@@ -65,20 +76,6 @@ class LoginUser(IndexView):
             else:
                 return self.render_to_json({'error': {"password": ["Wrong password."]}}, status=500)
         return self.render_to_json()
-
-
-# class LoginUser2(LoginView):
-#     def render_to_response(self, context, **response_kwargs):
-#         return JsonResponse(context)
-
-    # def form_valid(self, form):
-    #     """Security check complete. Log the user in."""
-    #     login(self.request, form.get_user())
-    #     return JsonResponse({'form': form}, status=200)
-    #
-    # def form_invalid(self, form):
-    #     print(form)
-    #     return JsonResponse({'errors': form.errors}, status=500)
 
 
 class LogoutUser(IndexView):

@@ -17,6 +17,8 @@ import Login from './components/form_components/Login.vue'
 import Register from './components/form_components/Register.vue'
 import AskPasswordReset from './components/form_components/AskPasswordReset.vue'
 import PasswordReset from './components/form_components/PasswordReset.vue'
+import NotFound from './components/NotFound.vue'
+
 import VueCookies from 'vue-cookies'
 import Notifications from 'vue-notification'
 
@@ -31,9 +33,6 @@ const routes = [
     {
         path: '/',
         component: Cryptosection,
-        meta: {
-            requiresAuth: true
-        },
         children: [
             {
                 path: '',
@@ -60,6 +59,10 @@ const routes = [
     {
         path: '/register',
         component: Register
+    },
+    {
+        path: '*',
+        component: NotFound
     }
 ];
 
