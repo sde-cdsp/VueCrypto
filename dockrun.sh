@@ -14,17 +14,17 @@ docker run --rm -d \
 
 # Django application
 docker run --rm -d \
-           --name cryptodjango \
+           --name django \
            --network crypto-net -p 8000:80 \
-           --volume $(pwd):/vuecrypto \
+           --volume $(pwd):/cryptodjango \
            --entrypoint ./entrypoint.sh \
            -e POSTGRES_PASSWORD -e POSTGRES_DB -e POSTGRES_USER \
-           django_image_2:latest
+           littletoof/mycryptolist-django:latest
 
 # vue application
 docker run --rm -d \
-           --name cryptovue \
+           --name vue \
            --network crypto-net -p 8001:8001 \
-           --volume $(pwd)/mycryptolist:/mycryptolist \
-           vue_image:latest \
+           --volume $(pwd)/mycryptolist:/cryptovue \
+           littletoof/mycryptolist-vue:latest \
            npm run serve

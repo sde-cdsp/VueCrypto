@@ -4,10 +4,11 @@ FROM node:lts-alpine
 RUN npm install -g http-server
 
 # make the 'app' folder the current working directory
-WORKDIR /mycryptolist
+RUN mkdir /cryptovue
+WORKDIR /cryptovue
 
 # copy both 'package.json' and 'package-lock.json' (if available)
-COPY package*.json /mycryptolist/
+COPY package*.json /cryptovue/
 
 # install project dependencies
 RUN npm install
