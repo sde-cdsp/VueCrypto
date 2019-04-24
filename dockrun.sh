@@ -9,19 +9,19 @@ docker run --rm -d \
            --name db \
            --volume db_data:/var/lib/postgresql/data \
            --network crypto-net \
-           -e POSTGRES_PASSWORD -e POSTGRES_DB -e POSTGRES_USER \
+           -e POSTGRES_PASSWORD=${DOCKER_DB_PWD} -e POSTGRES_DB=${DOCKER_DB_NAME} -e POSTGRES_USER=${DOCKER_DB_USER} \
            postgres
 
 # Django application
-docker run --rm -d \
+docker run --rm \
            --name django \
            --network crypto-net -p 8000:80 \
            --volume $(pwd):/cryptodjango \
            --entrypoint ./entrypoint.sh \
-           -e POSTGRES_PASSWORD -e POSTGRES_DB -e POSTGRES_USER \
+           -e DOCKER_DB_PWD -e DOCKER_DB_NAME -e DOCKER_DB_USER -e DOCKER_DB_PORT -e DOCKER_DB_HOST -e DOCKER_DB_ENGINE -e DOCKER_SECRET_KEY \
            littletoof/mycryptolist-django:latest
 
-# vue application
+# Vue application
 docker run --rm -d \
            --name vue \
            --network crypto-net -p 8001:8001 \

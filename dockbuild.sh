@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 # build django image
-docker build -t django_image_2 .
+docker build -t django_image .
