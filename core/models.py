@@ -12,7 +12,7 @@ def default_crypto_dict():
 
 class Crypto(models.Model):
     name = models.CharField(max_length=64)
-    symbol = models.CharField(max_length=8)
+    symbol = models.CharField(max_length=8, default="")
     urls = JSONField(default=default_crypto_dict)
     logo = models.URLField(default='')
 

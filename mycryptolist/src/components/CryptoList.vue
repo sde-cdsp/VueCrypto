@@ -27,7 +27,7 @@
                 </tr>
             </thead>
             <tbody>
-                <Cryptorow v-for="(crypto, symbol) in cryptosSelected" class="row-coin" :key="symbol" v-bind="crypto" @delete="deleteCrypto(symbol)" @switchFav="switchFavorite(symbol)">
+                <Cryptorow v-for="(crypto, symbol) in cryptosSelected" class="row-coin" :key="symbol" v-bind="crypto" @delete="deleteCrypto" @switchFav="switchFavorite(symbol)">
                 </Cryptorow>
             </tbody>
         </table>

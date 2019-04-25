@@ -13,7 +13,7 @@ docker run --rm -d \
            postgres
 
 # Django application
-docker run --rm \
+docker run --rm -d \
            --name django \
            --network crypto-net -p 8000:80 \
            --volume $(pwd):/cryptodjango \

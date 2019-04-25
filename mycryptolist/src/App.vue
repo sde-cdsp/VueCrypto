@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3 class="text-center"><router-link to="/">Cryptocurrencies Pricing</router-link></h3>
+        <h3 class="text-center"><router-link to="/">Cryptocurencies Pricing</router-link></h3>
         <hr/>
         <div class="subhead">
             <notifications group="notif"></notifications>
@@ -16,15 +16,11 @@
 
 <script>
 
-    import CryptoList from './components/CryptoList.vue'
     import axios from 'axios';
     import LoginForm from './utils/utils.js'
 
     export default {
         name: 'App',
-        components: {
-            CryptoList,
-        },
         data: () => {
             return {
                 username: "",
@@ -69,7 +65,6 @@
                 })
                 .catch(error => {
                     this.errors = error.response.data.error;
-                    reject();
                 })
             }
         }

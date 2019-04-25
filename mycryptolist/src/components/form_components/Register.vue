@@ -53,6 +53,7 @@
                 })
                 .catch(error => {
                     this.form.errors = error.response.data.error;
+                    this.form.isLoading = false;
                 })
             },
         }

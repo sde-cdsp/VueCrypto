@@ -1,28 +1,23 @@
 const BundleTracker = require("webpack-bundle-tracker");
 
 module.exports = {
-    publicPath: "http://0.0.0.0:8001/",
+    publicPath: "http://localhost:8001/",
     outputDir: './dist/',
-
+    filenameHashing: false,
+    devServer: {
+        hotOnly: true,
+        port: 8001,
+        headers: { // allow different CORS headers
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Headers': '*',
+            'Access-Control-Allow-Credentials': true,
+        },
+    },
+    configureWebpack: {
+        resolve: {alias: {'__STATIC__': 'static'}},
+        plugins: [new BundleTracker({filename: './webpack-stats.json'})],
+    },
     chainWebpack: config => {
-
-        config.optimization
-            .splitChunks(false)
-
-        config
-            .plugin('BundleTracker')
-            .use(BundleTracker, [{filename: '../mycryptolist/webpack-stats.json'}])
-
-        config.resolve.alias
-            .set('__STATIC__', 'static')
-
-        config.devServer
-            .public('http://0.0.0.0:8001')
-            .host('0.0.0.0')
-            .port(8001)
-            .hotOnly(true)
-            .watchOptions({poll: 1000})
-            .https(false)
-            .headers({"Access-Control-Allow-Origin": ["\*"]})
-            }
-        };
+        config.optimization.delete('splitChunks');
+    }
+};
