@@ -25,6 +25,6 @@ docker run --rm -d \
 docker run --rm -d \
            --name vue \
            --network crypto-net -p 8001:8001 \
-           --volume $(pwd)/mycryptolist:/cryptovue \
+           --volume $(pwd)/mycryptolist:/cryptovue --volume /cryptovue/node_modules \
            littletoof/mycryptolist-vue:latest \
            npm run serve
