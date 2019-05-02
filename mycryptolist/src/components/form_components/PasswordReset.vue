@@ -38,8 +38,18 @@
         created() {
             this.form.username = this.$route.query.username;
             this.form.key = this.$route.query.key;
+            this.isValid();
         },
         methods: {
+            isValid() {
+                console.log(this.key, this.username)
+                return axios.get('password_reset',
+                    {params: {key: this.form.key, username: this.form.username}}
+                    )
+                    .then(() => {})
+                    .catch((error) => this.form.errors = error.response.data.error)
+                    .finally(() => this.form.isLoading = false)
+            },
             resetPassword() {
                 this.form.isLoading = true;
                 return axios.post('password_reset/', this.form.userData(), this.form.headers())

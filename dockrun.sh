@@ -9,6 +9,7 @@ docker run --rm -d \
            --name db \
            --volume db_data:/var/lib/postgresql/data \
            --network crypto-net \
+           -p 5433:${DOCKER_DB_PORT} \
            -e POSTGRES_PASSWORD=${DOCKER_DB_PWD} -e POSTGRES_DB=${DOCKER_DB_NAME} -e POSTGRES_USER=${DOCKER_DB_USER} \
            postgres
 

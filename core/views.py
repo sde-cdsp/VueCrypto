@@ -1,4 +1,6 @@
 import requests
+from uuid import UUID
+
 from braces.views import JSONResponseMixin
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
@@ -13,7 +15,6 @@ from django.shortcuts import render, redirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect, csrf_exempt
 from django.views.generic import TemplateView
-
 from core.models import ResetPassword, CryptoUser, Crypto
 from VueCrypto.settings import EMAIL_HOST_USER
 import VueCrypto.configs as configs
@@ -104,25 +105,28 @@ class AskPasswordResetView(IndexView):
 class PasswordResetView(IndexView):
     def get(self, request, *args, **kwargs):
         try:
-            rp = ResetPassword.objects.get(key=request.GET.get('key'), user__username=request.GET.get('username'), expired=False)
+            username, key = request.GET.get('username'), UUID(request.GET.get('key')).hex
+            rp = ResetPassword.objects.get(key=key, user__username=username)
             if rp.expired:
-                return self.render_to_json({'error': {"key": ["The link is invalid."]}}, status=500)
-        except ObjectDoesNotExist:
-            return self.render_to_json({'error': {"key": ["The link is invalid."]}}, status=500)
-        return render(request, 'application.html', {'username': rp.user.username, 'key': rp.key})
+                return self.render_to_json({'error': {"key": ["The link has expired."]}}, status=500)
+        except (ObjectDoesNotExist, ValidationError):
+            return self.render_to_json({'error': {"key": ["The link is invalid. Please retry from the link you received by e-mail."]}}, status=500)
+        return self.render_to_json()
 
     def post(self, request):
         try:
-            username = request.POST.get('username')
-            rp = ResetPassword.objects.get(key=request.POST.get('key'), user__username=username)
+            username, key = request.POST.get('username'), UUID(request.POST.get('key')).hex
+            rp = ResetPassword.objects.get(key=key, user__username=username)
             if rp.expired:
-                return self.render_to_json({'error': {"resetpw": ["Link expired."]}})
+                return self.render_to_json({'error': {"key": ["The link has expired."]}}, status=500)
         except (ObjectDoesNotExist, ValidationError):
-            return self.render_to_json({'error': {"resetpw": ["Invalid. Please retry from the link you received by e-mail."]}})
+            return self.render_to_json({'error': {"key": ["Invalid. Please retry from the link you received by e-mail."]}}, status=500)
 
         form = SetPasswordForm(User.objects.get(username=username), request.POST)
         if form.is_valid():
             form.save()
+            rp.expired = True
+            rp.save()
             return self.render_to_json({})
         return self.render_to_json({'error': form.errors}, status=500)
 

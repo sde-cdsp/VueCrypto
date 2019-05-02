@@ -87,8 +87,7 @@
                             text: 'You are successfully logged in',
                             type: 'success'
                         });
-                        this.$emit('connect', response['data']['username']);
-                        this.$router.push({path: "/"});
+                        this.$router.push("/");
                     })
                     .catch(() => this.form.isLoading = false)
                     .finally(() => this.form.isLoading = false)

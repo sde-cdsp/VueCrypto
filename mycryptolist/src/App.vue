@@ -9,7 +9,7 @@
                 <div><a class="float-right" @click="logout">Log out</a></div>
             </div>
         </div>
-        <router-view :username="username" @connect="onConnect"></router-view>
+        <router-view :username="username"></router-view>
     </div>
 
 </template>
@@ -48,9 +48,6 @@
             this.axios.get('get_user_connected/').then(response => this.username = response['data']['username']);
         },
         methods: {
-            onConnect(username) {
-                this.username = username;
-            },
             logout() {
                 let form = new LoginForm();
                 return axios.post('logout/', {}, form.headers())
