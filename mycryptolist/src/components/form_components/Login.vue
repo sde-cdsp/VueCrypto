@@ -19,16 +19,6 @@
     import Form from '../../utils/utils.js'
 
     class LoginForm extends Form {
-        constructor(data) {
-            super(data);
-        }
-
-        defaultData() {
-            return {
-                username: '',
-                password: ''
-            }
-        }
 
         login() {
             this.isLoading = true;

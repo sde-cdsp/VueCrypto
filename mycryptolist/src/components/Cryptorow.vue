@@ -1,6 +1,6 @@
 <template>
     <tr>
-        <td style="font-weight: bold"><router-link to="/coin">{{ symbol }}&nbsp;</router-link><img width="10%" :src="logo"/></td>
+        <td style="font-weight: bold"><img width="10%" :src="logo"/><router-link :to="{name: 'Crypto', params: {symbol: symbol, logo: logo, price: price}}">&nbsp;{{ symbol }}&nbsp;</router-link></td>
         <td>
             <span display="isReady" class="price" :class="coinClass">{{ price }}$</span>
         </td>

@@ -1,6 +1,5 @@
 <template>
     <div>
-        <h2>Crypto Section</h2>
         <router-view :username="username"></router-view>
     </div>
 </template>

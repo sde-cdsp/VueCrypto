@@ -39,8 +39,10 @@ const routes = [
                 component: CryptoList
             },
             {
-                path: 'coin',
-                component: Crypto
+                path: 'coin/:symbol',
+                component: Crypto,
+                name: "Crypto",
+                props: true,
             }
         ]
     },
