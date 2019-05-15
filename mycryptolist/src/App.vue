@@ -32,6 +32,9 @@
                 return this.username.length > 0;
             }
         },
+        created() {
+            this.axios.get('get_user_connected/').then(response => this.username = response['data']['username'])
+        },
         beforeMount() {
             let error = document.getElementsByTagName('div')[0].getAttribute('data') || '';
             this.error = error
@@ -45,7 +48,12 @@
                 });
                 this.error = ""
             }
-            this.axios.get('get_user_connected/').then(response => this.username = response['data']['username']);
+        },
+        watch:{
+            $route (to, from) {
+                if (to.path === '/' && from.path === '/login')
+                    this.axios.get('get_user_connected/').then(response => this.username = response['data']['username'])
+            }
         },
         methods: {
             logout() {

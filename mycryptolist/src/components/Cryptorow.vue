@@ -7,7 +7,7 @@
         <td>${{ marketCap }}</td>
         <td display="isReady" :style="{color: dayChangeColor}">{{ change24Hour }}%</td>
         <td>
-            <a v-for="(url, url_type) in this.urls" :href="url" style="margin-right: 2px;" :title="url_type"><img style="max-height: 1.5em; object-fit: fill;" :src=getImage(url_type)></a>
+            <a v-for="(url, url_type) in this.urls" :href="url" style="margin-right: 2px;" :title="url_type" target="_blank"><img style="max-height: 1.5em; object-fit: fill;" :src=getImage(url_type)></a>
         </td>
         <td><v-btn color="blue" dark @click="dialog = true" small title="Delete">X</v-btn>&nbsp;
             <v-icon dark color="#FFDE03" v-text="favoriteClass" @click="switchFavorite" :title="favoriteTitle"></v-icon>

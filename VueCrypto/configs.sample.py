@@ -18,6 +18,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "your e-mail address"
 EMAIL_HOST_PASSWORD = "your email password"
 
+DEBUG = True
 
 for k, v in os.environ.items():
     if k.startswith("DOCKER_"):

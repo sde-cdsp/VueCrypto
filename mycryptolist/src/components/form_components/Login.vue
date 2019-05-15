@@ -22,31 +22,27 @@
 
         login() {
             this.isLoading = true;
-            return new Promise((resolve, reject) => {  // a Promise is returned to handle Vue related data
-                return axios.post('login/', this.userData(), this.headers())
-                .then((response) => {
-                    resolve(response);
-                })
-                .catch(error => {
-                    this.errors = error.response.data.error;
-                    reject();
-                })
-            });
+            return axios.post('login/', this.userData(), this.headers())
+            .then((response) => {
+                return Promise.resolve(response);
+            })
+            .catch(error => {
+                this.errors = error.response.data.error;
+                return Promise.reject(error);
+            })
         }
 
         logout() {
             this.isLoading = true;
-            return new Promise((resolve, reject) => {
-                axios.post('logout/', {}, this.headers())
-                .then((response) => {
+            return axios.post('logout/', {}, this.headers())
+            .then((response) => {
                     this.reset(this.defaultData());
-                    resolve(response);
-                })
-                .catch(error => {
+                    return Promise.resolve(response);
+            })
+            .catch(error => {
                     this.errors = error.response.data.error;
-                    reject();
-                })
-            });
+                    return Promise.reject(error);
+            })
         }
     }
 
