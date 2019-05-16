@@ -27,7 +27,7 @@
                 </tr>
             </thead>
             <tbody>
-                <Cryptorow v-for="(crypto, symbol) in cryptosSelected" class="row-coin" :key="symbol" v-bind="crypto" @delete="deleteCrypto" @switchFav="switchFavorite(symbol)">
+                <Cryptorow v-for="(crypto, symbol) in cryptosSelected" class="row-coin" :key="symbol" v-bind="crypto" @delete="deleteCrypto" @switchFav="switchFavorite">
                 </Cryptorow>
             </tbody>
         </table>
@@ -75,9 +75,16 @@ import _ from 'lodash'
                 return this.favoriteOnly ? "Show all" : "Show favorites";
             },
             cryptosSelected() {
+                console.log('triggered')
                 if (!this.favoriteOnly)
                     return this.cryptos;
-                return _.filter(this.cryptos, crypto => crypto['favorite'] === true);
+                // return _.filter(this.cryptos, crypto => crypto['favorite'] === true);
+                let arr = _.filter(this.cryptos, crypto => crypto['favorite'] === true);
+                let o = {};
+                for (let c of arr) {
+                    o[c['symbol']] = c;
+                }
+                return o;
             }
         },
         methods: {
@@ -198,13 +205,10 @@ import _ from 'lodash'
                         this.refreshData();
                 });
             },
-            onConnect(username) {
-                this.username = username;
-                this.initData();
-            },
             switchFavorite(symbol) {
-                this.cryptosSelected[symbol].favorite = !this.cryptosSelected[symbol].favorite;
-                this.$forceUpdate();
+                let toUpdate = this.cryptos[symbol];
+                toUpdate.favorite = !toUpdate.favorite;
+                this.cryptos = Object.assign({}, this.cryptos);
             },
         }
     }

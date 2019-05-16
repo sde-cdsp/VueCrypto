@@ -9,7 +9,7 @@
                 <div><a class="float-right" @click="logout">Log out</a></div>
             </div>
         </div>
-        <router-view :username="username"></router-view>
+        <router-view :username="username" @connect="updateUsername"></router-view>
     </div>
 
 </template>
@@ -49,12 +49,6 @@
                 this.error = ""
             }
         },
-        watch:{
-            $route (to, from) {
-                if (to.path === '/' && from.path === '/login')
-                    this.axios.get('get_user_connected/').then(response => this.username = response['data']['username'])
-            }
-        },
         methods: {
             logout() {
                 let form = new LoginForm();
@@ -71,6 +65,9 @@
                 .catch(error => {
                     this.errors = error.response.data.error;
                 })
+            },
+            updateUsername(username) {
+                this.username = username
             }
         }
     }
