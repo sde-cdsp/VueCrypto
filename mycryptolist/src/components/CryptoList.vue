@@ -75,7 +75,6 @@ import _ from 'lodash'
                 return this.favoriteOnly ? "Show all" : "Show favorites";
             },
             cryptosSelected() {
-                console.log('triggered')
                 if (!this.favoriteOnly)
                     return this.cryptos;
                 // return _.filter(this.cryptos, crypto => crypto['favorite'] === true);

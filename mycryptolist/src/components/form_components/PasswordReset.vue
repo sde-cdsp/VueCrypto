@@ -42,7 +42,6 @@
         },
         methods: {
             isValid() {
-                console.log(this.key, this.username)
                 return axios.get('password_reset',
                     {params: {key: this.form.key, username: this.form.username}}
                     )
