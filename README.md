@@ -6,24 +6,19 @@ This project is made to work with [Docker](https://docs.docker.com/install/linux
 
 ### Project configuration
 #### Database setup
-You can set the database variables as you wish in the *variables.env* file.
+A *variables.samples.env* file is provided. 
+You can set the database variables as you wish and put them in a *variables.env* file, which will be used by the dockrun script.
 
 #### Other configs
 
-A *configs.sample.py* file is provided. You must set the provided variables for several features to work.  
-When this is done, rename this file as *configs.py*
+A *configs.sample.py* file is provided. You must set the provided variables for several features to work (such as getting a coinmarketcap API key).
+When this is done, copy them in a *configs.py* file.
 
 
 ## Create the docker images
-Generate the vue app image:
+Generate the django and vue images
 ```
-cd mycryptolist
-./dockbuild.sh
-```
-Generate the django app image:
-```
-cd ..
-./dockbuild.sh
+./dockbuild.sh && cd mycryptolist && ./dockbuild.sh
 ```
 
 ## Run the app
