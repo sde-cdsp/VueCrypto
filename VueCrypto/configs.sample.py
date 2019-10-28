@@ -6,7 +6,7 @@ DB_PWD = 'your_password'
 DB_NAME = 'db_name'
 DB_PORT = '5432'
 DB_ENGINE = 'django.db.backends.postgresql_psycopg2'
-DB_HOST = ''
+DB_HOST = '127.0.0.1'
 
 
 CMC_KEY = 'your_cmc_api_key'
