@@ -13,7 +13,7 @@
     "material-design-icons-iconfont": "^4.0.5",
     "npm": "^6.9.0",
     "numeral": "^2.0.6",
-    "qs": "^6.7.0",
+    "qs": "^6.7.3",
     "run": "^1.4.0",
     "serve": "^11.0.0",
     "vue": "^2.6.10",
